@@ -1,0 +1,66 @@
+﻿@model Perfomans.Models.Parameters
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-6">
+        <div style="margin-top: 3em" class="ui segment">
+            <h1 class="ui center aligned header">Create</h1>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coefficient" class="control-label"></label>
+                    <input asp-for="Coefficient" class="form-control" />
+                    <span asp-validation-for="Coefficient" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Description for mark "1"</label>
+                    <input asp-for="Mark_1_description" class="form-control" />
+                    <span asp-validation-for="Mark_1_description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Description for mark "2"</label>
+                    <input asp-for="Mark_2_description" class="form-control" />
+                    <span asp-validation-for="Mark_2_description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Description for mark "3"</label>
+                    <input asp-for="Mark_3_description" class="form-control" />
+                    <span asp-validation-for="Mark_3_description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Description for mark "4"</label>
+                    <input asp-for="Mark_4_description" class="form-control" />
+                    <span asp-validation-for="Mark_4_description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Description for mark "5"</label>
+                    <input asp-for="Mark_5_description" class="form-control" />
+                    <span asp-validation-for="Mark_5_description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-3">
+    </div>
+</div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

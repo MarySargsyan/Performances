@@ -1,0 +1,27 @@
+﻿@model Perfomans.Models.LoginModel
+
+<h2 style="margin-top: 2em">Log in</h2>
+
+<form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div style="width: 50%" class="ui placeholder segment">
+
+        <div class="ui form">
+            <div class="field">
+                <label>Email</label>
+                <div class="ui left icon input">
+                    <input asp-for="Email" type="text" placeholder="Email">
+                    <i class="user icon"></i>
+                </div>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <div class="ui left icon input">
+                    <input asp-for="Password" type="password">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+            <input style="background-color: #54354F" type="submit" class="ui blue submit button" value="Login">
+        </div>
+    </div>
+</form>

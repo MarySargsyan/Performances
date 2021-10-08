@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] SolbegPeople</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js">
+    </script>
+    <style>
+        a {
+            color: #54354F;
+        }
+        .PrimaryB {
+            background-color: #54354F;
+            color: white
+        }
+
+        .SecondaryB {
+            background-color: transparent;
+            color: #54354F;
+            border: #54354F 0.2em solid;
+            padding: 0.46em 1em;
+            border-radius: 0.3em
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top" style=" background-color: #54354F; color: #ffffff">
+            <div class="container">
+
+                <a href="@Url.Action("Index", "Home", new{area = ""})" style="background-color: transparent; border: none" type="submit">
+                    <img type="submit" style="margin-top: 5px;margin-left:2px; width: 160px; display:inline" src="~/WiteIcon.png" />
+                </a>
+
+                <div style="margin-top: -2.5em" class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <ul style="display:inline" class="nav navbar-nav navbar-right">
+                                <li style="display:inline; margin-right: 1em">
+                                    Hello,@User.Identity.Name!
+                                </li>
+                                <li class="nav-item" style="display:inline">
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Users/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button type="submit" class="nav-link btn btn-link ui inverted button">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
