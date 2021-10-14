@@ -42,10 +42,22 @@ namespace Perfomans.Models
             string adminName = "Mary";
             string adminSourName = "Sargsyan";
 
+            string devdep = "Developing";
+
+            string DefState = "Default";
+            string FireState = "Fired";
+
             // добавляем роли
             Role adminRole = new Role { Id = 1, Name = adminRoleName };
             Role userRole = new Role { Id = 2, Name = userRoleName };
-            User adminUser = new User { Id = 1, Name = adminName, SourName = adminSourName, Email = adminEmail, Password = adminPassword, RoleId = adminRole.Id };
+
+            Departments departments = new Departments { Id = 1, Name = devdep };
+
+            State state = new State { Id = 1, Name = DefState };
+            State state1 = new State { Id = 1, Name = FireState };
+
+
+            User adminUser = new User { Id = 1, Name = adminName, SourName = adminSourName, Email = adminEmail, Password = adminPassword, RoleId = adminRole.Id, DepartmentId= departments.Id, StateId = state.Id, SupervisorId = 1 };
 
             modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole });
             modelBuilder.Entity<User>().HasData(new User[] { adminUser });
