@@ -11,8 +11,8 @@ namespace Perfomans.Models
         public DbSet<User> User { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Departments> Departments { get; set; }
-        public DbSet<DepartmentHead> DepartmentHead { get; set; }
         public DbSet<DepartmentParameters> DepartmentParameters { get; set; }
+        public DbSet<DepartmentHead> Heads { get; set; }
         public DbSet<Parameters> Parameters { get; set; }
         public DbSet<Evaluations> Evaluations { get; set; }
         public DbSet<State> States { get; set; } 
@@ -29,6 +29,10 @@ namespace Perfomans.Models
                 HasOne(pi => pi.Department).WithMany(pi => pi.Parameters).HasForeignKey(p => p.DepartmentId);
             modelBuilder.Entity<DepartmentParameters>().
                 HasOne(pi => pi.parameter).WithMany(pi => pi.Departments).HasForeignKey(p => p.ParameterId);
+
+            modelBuilder.Entity<DepartmentHead>().HasKey(d => new { d.DepartmentId, d.HeadId });
+            modelBuilder.Entity<DepartmentHead>().HasOne(d => d.Departments).WithMany(d => d.Head).HasForeignKey(d => d.DepartmentId);
+            modelBuilder.Entity<DepartmentHead>().HasOne(d => d.Head).WithMany(d => d.DeportamentHead).HasForeignKey(d => d.HeadId);
 
             string adminRoleName = "admin";
             string userRoleName = "user";

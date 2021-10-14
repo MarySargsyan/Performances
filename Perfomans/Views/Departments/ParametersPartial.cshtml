@@ -1,0 +1,16 @@
+﻿@model Perfomans.Models.Departments
+
+<h1>Parameters</h1>
+@foreach(DepartmentParameters deparameters in ViewBag.DepPar)
+{
+    if(deparameters.DepartmentId == Model.Id) 
+    {
+        @foreach (Parameters parameters in ViewBag.Param)
+        {
+            if(deparameters.ParameterId == parameters.Id)
+            {
+                @parameters.Name
+            }
+        }
+    }
+}

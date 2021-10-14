@@ -1,0 +1,88 @@
+﻿@model Perfomans.Models.Departments
+@using Perfomans.Models
+@{
+    ViewData["Title"] = "DepartmentPage";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Chatbutton").click(function () {
+            $("#Chatbutton").addClass('active');
+            $("#Newsbutton").removeClass('active');
+            $("#news").css("display", "none");
+            $("#chat").css("display", "block");
+        })
+        $("#Newsbutton").click(function () {
+            $("#Newsbutton").addClass('active');
+            $("#Chatbutton").removeClass('active');
+            $("#chat").css("display", "none");
+            $("#news").css("display", "block");
+        })
+    });
+</script>
+<body>
+
+    <div style="margin-top: 2em" class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="ui card">
+                    <div class="content">
+                        <div class="ui placeholder">
+                            <div class="ui header">
+                                <div class="content">
+                                    <h2 class="header">
+                                        @Model.Name
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub content">
+                        <div style="display:inline" class="header">Head :</div>
+                                
+                                @foreach (DepartmentHead h in ViewBag.HeadDep)
+                                {
+                                    if (h.DepartmentId == Model.Id)
+                                    {
+                                        DepartmentHead head = h;
+                                        @foreach (User u in ViewBag.Heads)
+                                        {
+                                            if(head.HeadId == u.Id)
+                                            {
+                                                @u.Name
+                                            }
+                                        }
+                                    }
+                                }
+                    </div>
+                    <div style="margin-left:5%" class="extra content">
+                        <div class="ui  buttons">
+                            <a style="color: #54354F" class="ui  button" asp-action="Edit" asp-route-id="@Model.Id"><i class="edit icon"></i>Edit</a> |
+                            <a style="color: #54354F" class="ui  button" asp-action="Delete" asp-route-id="@Model.Id"><i class="trash alternate icon"></i>Delete</a> |
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a asp-action="Index"><i class="chevron left icon"></i>Back</a>
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <div class="ui segment">
+                    <br />
+                    <div class="ui secondary pointing menu">
+                        <a id="Newsbutton" class="active item">
+                            Parameters
+                        </a>
+                        <a id="Chatbutton" class="item">
+                            Employee
+                        </a>
+                    </div>
+                    <div id="news"><partial name="ParametersPartial.cshtml" /></div>
+                    <div id="chat" style="display: none"><partial name="EmployeePartial.cshtml" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+

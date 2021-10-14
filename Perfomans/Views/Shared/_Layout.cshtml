@@ -44,11 +44,12 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
+
                         using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                         {
                             @Html.AntiForgeryToken()
 
-                            <ul style="display:inline" class="nav navbar-nav navbar-right">
+                            <ul style="display:inline; color: white" class="nav navbar-nav navbar-right">
                                 <li style="display:inline; margin-right: 1em">
                                     Hello,@User.Identity.Name!
                                 </li>
@@ -58,8 +59,20 @@
                                     </form>
                                 </li>
                             </ul>
+                            <ul style="display:inline; color: white; margin-right: 36%" class="nav navbar-nav">
+                                <li style="display:inline; color: white">
+                                    <a style="display:inline; color: white; padding-right: 2em" class="nav-link btn btn-link" asp-area="" asp-controller="Parameters" asp-action="Index">Parameters</a>
+                                </li>
+                                @*<li style="display:inline; color: white">
+                                    <a style="display:inline; color: white;padding-right: 2em" class="nav-link btn btn-link" asp-area="" asp-controller="Departments" asp-action="Index">Departments</a>
+                                </li>*@
+                                <li style="display:inline; color: white">
+                                    <a style="display:inline; color: white" class="nav-link btn btn-link" asp-area="" asp-controller="Users" asp-action="Index">Employees</a>
+                                </li>
+                            </ul>
                         }
                     }
+
                 </div>
             </div>
         </nav>

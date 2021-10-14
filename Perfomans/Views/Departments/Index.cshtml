@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Perfomans.Models.Departments>
+    <div style="" margin-top: 2em;">
+        <a class="SecondaryB" style="float:right" asp-action="Create"><i class="plus icon"></i>Create New</a>
+    </div>
+    <div style="margin-top: 2em;" class="centered ui link cards">
+
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <a asp-action="DepartmentPage" asp-route-id="@item.Id">
+                    <div class="content">
+                        <div class="ui placeholder">
+                            <h2 class="ui centered header">
+                                @item.Name
+                            </h2>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+
+        }
+    </div>
+    <br />

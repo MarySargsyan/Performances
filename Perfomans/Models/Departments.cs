@@ -10,5 +10,12 @@ namespace Perfomans.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public List<DepartmentParameters> Parameters { get; set; }
+        public List<DepartmentHead> Head { get; set; }
+
+        public List<User> User { get; set; }
+        public Departments()
+        {
+            User = new List<User>();
+        }
     }
 }

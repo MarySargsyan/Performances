@@ -28,11 +28,8 @@ namespace Perfomans.Models
         public int? DepartmentId { get; set; }
         public Departments Department { get; set; }
 
-        //public List<Orders> Orders { get; set; }
+        public List<DepartmentHead> DeportamentHead { get; set; }
 
-        //public User()
-        //{
-        //    Orders = new List<Orders>();
-        //}
+
     }
 }
