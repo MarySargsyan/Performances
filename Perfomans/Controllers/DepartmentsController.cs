@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PagedList;
 using Perfomans.Models;
 using System.Web;
-
+using Perfomans.ViewModels;
 
 namespace Perfomans.Controllers
 {
@@ -25,12 +25,38 @@ namespace Perfomans.Controllers
         {
             return View(_context.Departments.ToList());
         }
+         public ActionResult GroupsIndex()
+        {
+            return View(_context.Groups.ToList());
+        }
 
         public ActionResult DepartmentPage(int? id)
         {
-            ViewBag.HeadDep = _context.Heads.ToList();
+            List<Evaluations> lastevaluations = new List<Evaluations>();
+            foreach (Evaluations evaluations in _context.Evaluations.ToList())
+            {
+                lastevaluations.Add(evaluations);
+            }
+            foreach (Evaluations laste in lastevaluations.ToList())
+            { 
+                foreach (Evaluations e in _context.Evaluations.ToList())
+                {
+                        if ((e.UserId == laste.UserId) & (e.ParameterId == laste.ParameterId) & (e.Id < laste.Id))
+                        {
+                            lastevaluations.Remove(e);
+                        }
+                }
+            }
+
+            ViewBag.Evaluations = lastevaluations;
+            ViewBag.Parameters = _context.Parameters.ToList();
+            ViewBag.ParametersGroups = _context.ParametersGroups.ToList();
             ViewBag.Heads = _context.User.ToList();
             Departments departments = _context.Departments.Find(id);
+            departments.DepartmentParameters = _context.DepartmentParameters.ToList();
+            departments.Head = _context.Heads.ToList();
+            departments.Groups = _context.Groups.ToList();
+            departments.User = _context.User.ToList();
             return View(departments);
         }
 
@@ -71,10 +97,6 @@ namespace Perfomans.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Departments departments)
         {
-            if (id != departments.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -101,17 +123,8 @@ namespace Perfomans.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var departments = await _context.Departments
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (departments == null)
-            {
-                return NotFound();
-            }
 
             return View(departments);
         }
@@ -131,8 +144,14 @@ namespace Perfomans.Controllers
         }
         public ActionResult ParametersPartial()
         {
-            ViewBag.DepPar = _context.DepartmentParameters.ToList();
-            ViewBag.Param = _context.Parameters.ToList();
+            ViewBag.DepartmentParameters = _context.DepartmentParameters.ToList();
+            ViewBag.Parameters = _context.Parameters.ToList();
+            return PartialView();
+        }
+        public ActionResult GroupsPartial()
+        {
+            ViewBag.Parameters = _context.Parameters.ToList();
+            ViewBag.Groups = _context.Groups.ToList();
             return PartialView();
         }
         private bool DepartmentsExists(int id)

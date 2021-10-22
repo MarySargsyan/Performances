@@ -1,0 +1,43 @@
+﻿@model Perfomans.Models.Groups
+    <h4>Groups</h4>
+    <hr />
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <div style="margin-top: 3em" class="ui segment">
+
+                <h1 class="ui center aligned header">Parameters</h1>
+
+                <table class="ui compact celled definition table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Parameter</th>
+                            <th>Mark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ParametersGroup parametersGroup in Model.ParametersGroups)
+                        {
+                            <tr>
+
+                                <td>
+                                    @parametersGroup.Parameters.Name
+                                </td>
+                                <td>
+                                    @parametersGroup.Mark
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", "GroupsParameters", new { ParametertId = parametersGroup.ParameterId, GroupId = parametersGroup.GroupId })
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                @Html.ActionLink("Done", "DepartmentPage", "Departments", new { id = @ViewBag.DepId })
+
+            </div>
+        </div>
+    </div>

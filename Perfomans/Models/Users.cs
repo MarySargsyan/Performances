@@ -30,6 +30,5 @@ namespace Perfomans.Models
 
         public List<DepartmentHead> DeportamentHead { get; set; }
 
-
     }
 }

@@ -1,16 +1,63 @@
 ﻿@model Perfomans.Models.Departments
-
+@using Perfomans.Models
 <h1>Parameters</h1>
-@foreach(DepartmentParameters deparameters in ViewBag.DepPar)
-{
-    if(deparameters.DepartmentId == Model.Id) 
-    {
-        @foreach (Parameters parameters in ViewBag.Param)
+
+<table class="ui compact celled definition table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Mark</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DepartmentParameters deparameters in Model.DepartmentParameters)
         {
-            if(deparameters.ParameterId == parameters.Id)
-            {
-                @parameters.Name
-            }
-        }
-    }
-}
+            <tr>
+
+                @foreach (Parameters parameters in ViewBag.Parameters)
+                {
+                    if (deparameters.ParameterId == parameters.Id)
+                    {
+                        <td>@parameters.Name</td>
+
+                    }
+                }
+                <td> 
+                    @deparameters.mark
+                </td>
+                <td>
+                    @using (Html.BeginForm("Delete", "DepParam", FormMethod.Get))
+                    {
+                        <input type="hidden" id="DepartmentId" name="DepartmentId" value="@deparameters.DepartmentId" />
+                        <input type="hidden" id="ParameterId" name="ParameterId" value="@deparameters.ParameterId" />
+                       <button type="submit"  style="margin-left: 1em; color: #54354F; border: none; float: left"><i class="trash alternate icon"></i></button>
+                    }
+                    
+                    @using (Html.BeginForm("Edit", "DepParam", FormMethod.Get))
+                    {
+                        <input type="hidden" id="DepartmentId" name="DepartmentId" value="@deparameters.DepartmentId" />
+                        <input type="hidden" id="ParameterId" name="ParameterId" value="@deparameters.ParameterId" />
+                       <button type="submit" style="margin-left:1em; color:#54354F; border: none"><i class="edit icon"></i></button>
+                    }
+                </td>
+            </tr>
+
+         }
+
+    </tbody>
+        <tfoot class="full-width">
+            <tr>
+                <th></th>
+                <th colspan="4">
+                    <div class="ui right floated small">
+                        @using (Html.BeginForm("Create", "DepParam", FormMethod.Get))
+                        {
+                            <input type="hidden" Id="depId" name="depId" value="@Model.Id">
+                            <button type="submit" class="SecondaryB" style="float:right"><i class="plus icon"></i>Create New</button>
+                        }
+                    </div>
+
+                </th>
+            </tr>
+        </tfoot>
+</table>

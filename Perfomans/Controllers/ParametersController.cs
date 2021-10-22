@@ -87,29 +87,11 @@ namespace Perfomans.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Coefficient,Mark_1_description,Mark_2_description,Mark_3_description,Mark_4_description,Mark_5_description")] Parameters parameters)
         {
-            if (id != parameters.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(parameters);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ParametersExists(parameters.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            {  
+                _context.Update(parameters);
+                await _context.SaveChangesAsync();           
                 return RedirectToAction(nameof(Index));
             }
             return View(parameters);
@@ -118,18 +100,8 @@ namespace Perfomans.Controllers
         // GET: Parameters/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var parameters = await _context.Parameters
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (parameters == null)
-            {
-                return NotFound();
-            }
-
             return View(parameters);
         }
 

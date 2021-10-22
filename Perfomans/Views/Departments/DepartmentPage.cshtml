@@ -9,14 +9,26 @@
         $("#Chatbutton").click(function () {
             $("#Chatbutton").addClass('active');
             $("#Newsbutton").removeClass('active');
+            $("#Groupbutton").removeClass('active');
+            $("#groups").css("display", "none");
             $("#news").css("display", "none");
             $("#chat").css("display", "block");
         })
         $("#Newsbutton").click(function () {
             $("#Newsbutton").addClass('active');
             $("#Chatbutton").removeClass('active');
+            $("#Groupbutton").removeClass('active');
+            $("#groups").css("display", "none");
             $("#chat").css("display", "none");
             $("#news").css("display", "block");
+        })
+        $("#Groupbutton").click(function () {
+            $("#Groupbutton").addClass('active');
+            $("#Chatbutton").removeClass('active');
+            $("#Newsbutton").removeClass('active');
+            $("#chat").css("display", "none");
+            $("#news").css("display", "none");
+            $("#groups").css("display", "block");
         })
     });
 </script>
@@ -40,7 +52,7 @@
                     <div class="sub content">
                         <div style="display:inline" class="header">Head :</div>
                                 
-                                @foreach (DepartmentHead h in ViewBag.HeadDep)
+                                @foreach (DepartmentHead h in Model.Head)
                                 {
                                     if (h.DepartmentId == Model.Id)
                                     {
@@ -77,9 +89,15 @@
                         <a id="Chatbutton" class="item">
                             Employee
                         </a>
+                        <a id="Groupbutton" class="item">
+                            Groups
+                        </a>
                     </div>
-                    <div id="news"><partial name="ParametersPartial.cshtml" /></div>
+                    <div id="news">
+                        <partial name="ParametersPartial.cshtml" />
+                    </div>
                     <div id="chat" style="display: none"><partial name="EmployeePartial.cshtml" /></div>
+                    <div id="groups" style="display: none"><partial name="GroupsPartial.cshtml" /></div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,61 @@
+﻿@model Perfomans.Models.Departments
+@using Perfomans.Models
+
+<h1>Groups</h1>
+
+<table class="ui compact celled definition table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Parameter</th>
+                <th>Mark</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (Groups groups in Model.Groups)
+             {
+                <tr>
+                    <td>
+                        @groups.Name
+                    </td>
+                    <td>
+                       @foreach (ParametersGroup parametersGroup in ViewBag.ParametersGroups)
+                        {
+                           @if (parametersGroup.GroupId == groups.id)
+                            {
+                              @parametersGroup.Parameters.Name<span>-</span>
+                              @parametersGroup.Mark
+
+                            }
+                           <br />
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Groups", new { id = groups.id, DepId = Model.Id }) |
+                        @Html.ActionLink("Delete", "Delete", "Groups", new { id = groups.id, DepId = Model.Id })
+
+                    </td>
+
+                </tr>             
+             }
+
+        </tbody>
+        <tfoot class="full-width">
+            <tr>
+                <th></th>
+                <th colspan="4">
+                    <div class="ui right floated small">
+                        @using (Html.BeginForm("Create", "Groups", FormMethod.Get))
+                        {
+                            <input type="hidden" Id="DepId" name="DepId" value="@Model.Id">
+                            <button type="submit" class="SecondaryB" style="float:right"><i class="plus icon"></i>Create New</button>
+                        }
+                        @Html.ActionLink("Export to Excel", "Excel", "Groups", new {DepId = Model.Id })
+
+                    </div>
+
+                </th>
+            </tr>
+        </tfoot>
+    </table>

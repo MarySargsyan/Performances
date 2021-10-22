@@ -15,7 +15,7 @@ namespace Perfomans.Models
         public string Mark_3_description { get; set; }
         public string Mark_4_description { get; set; }
         public string Mark_5_description { get; set; }
-
+        public List<ParametersGroup> ParametersGroups { get; set; }
         public List<DepartmentParameters> Departments { get; set; }
         public List<Evaluations> evaluations { get; set; }
         public Parameters()

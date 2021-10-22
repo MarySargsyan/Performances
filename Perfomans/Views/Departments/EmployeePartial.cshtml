@@ -1,2 +1,70 @@
 ﻿@model Perfomans.Models.Departments
-    <h1>Employee</h1>
+@using Perfomans.Models
+
+<h1>Employees</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10">
+            <table class="ui compact celled table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sourname</th>
+                        @foreach (DepartmentParameters deparameters in Model.DepartmentParameters)
+                        {
+                            @foreach (Parameters parameters in ViewBag.Parameters)
+                            {
+                                if (deparameters.ParameterId == parameters.Id)
+                                {
+                                    <th>@parameters.Name - 
+                                        @deparameters.mark
+                                    </th>
+
+                                }
+                            }
+                         }
+                        </tr>
+                    </thead>
+                <tbody>
+
+                    @foreach (User user in Model.User)
+                    {
+                        <tr>
+                            <td>
+                                @user.Name
+                            </td>
+                            <td>
+                                @user.SourName
+                            </td>
+                            <td>
+                                @foreach (Evaluations evaluations in ViewBag.Evaluations)
+                                {
+                                    @foreach (DepartmentParameters deparameters in Model.DepartmentParameters)
+                                    {
+                                        if (deparameters.ParameterId == evaluations.ParameterId)
+                                        {
+                                            @evaluations.Parameter.Name
+                                            @evaluations.Mark
+
+                                        }
+                                    }
+                                    <br />
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            @foreach(Groups groups in Model.Groups)
+            {
+                <div class="ui segment">
+                    @groups.Name
+                </div>
+            }
+        </div>
+    </div>
+</div>
