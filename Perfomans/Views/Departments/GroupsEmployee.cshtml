@@ -1,0 +1,27 @@
+﻿@model Perfomans.Models.Departments
+@using Perfomans.Models
+
+<div class="row">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-6">
+        <div style="margin-top: 3em" class="ui segment">
+            <div class="ui form">
+                <h1 class="ui center aligned header">Explore employee for @ViewBag.Group.Name</h1>
+
+                @using (Html.BeginForm("TopEmployees", "Departments", FormMethod.Get))
+                {
+                    <input type="hidden" id="GroupId" name="GroupId" value="@ViewBag.Group.id" />
+                    <input type="hidden" id="DepId" name="DepId" value="@Model.Id" />
+                    <input type="number" placeholder="Top employees count" name="EmployeeCount" id="EmployeeCount" />
+                    <button type="submit" class="SecondaryB">Create Top list</button>
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-3">
+    </div>
+
+</div>
+

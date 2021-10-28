@@ -83,20 +83,19 @@
                 <div class="ui segment">
                     <br />
                     <div class="ui secondary pointing menu">
-                        <a id="Newsbutton" class="active item">
-                            Parameters
-                        </a>
-                        <a id="Chatbutton" class="item">
+                        <a id="Chatbutton" class="active item">
                             Employee
                         </a>
+                        <a id="Newsbutton" class=" item">
+                            Parameters
+                        </a>
+
                         <a id="Groupbutton" class="item">
                             Groups
                         </a>
                     </div>
-                    <div id="news">
-                        <partial name="ParametersPartial.cshtml" />
-                    </div>
-                    <div id="chat" style="display: none"><partial name="EmployeePartial.cshtml" /></div>
+                    <div id="chat"><partial name="EmployeePartial.cshtml" /></div>
+                    <div id="news" style="display: none"><partial name="ParametersPartial.cshtml" /></div>
                     <div id="groups" style="display: none"><partial name="GroupsPartial.cshtml" /></div>
                 </div>
             </div>

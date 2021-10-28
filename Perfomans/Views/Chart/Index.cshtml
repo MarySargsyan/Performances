@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Perfomans.Models.Departments>
+
+<div style="margin-top: 2em;" class="centered ui cards">
+
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <div class="content">
+                <div class="ui placeholder">
+                    <h2 class="ui centered header">
+                        @item.Name
+                    </h2>
+
+                    @foreach (DepartmentHead h in ViewBag.Head)
+                    {
+                        if (h.DepartmentId == item.Id)
+                        {
+                            DepartmentHead head = h;
+                            @foreach (User u in ViewBag.AllUsers)
+                            {
+                                if (head.HeadId == u.Id)
+                                {
+                                    <h3 class="ui center aligned sub header">Head : @u.Name</h3>
+
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+            </div>
+
+                <div class="sub content">
+                    <div style="margin: 1em" class="ui cards">
+
+                        @foreach (User u in ViewBag.AllUsers)
+                        {
+                            if ((u.DepartmentId == item.Id) & (u.RoleId == 3))
+                            {
+                                <div class="card">
+                                    <div class="content">
+                                        <h4 class="ui center aligned sub header">TeamLead : @u.Name</h4>
+                                        
+                                    </div>
+                                    <div class="sub content">
+                                        Employees :
+                                        <div style="margin-top: 1em" class="ui middle aligned divided list">
+                                            @foreach(User employee in ViewBag.AllUsers)
+                                            {
+                                                  if(employee.SupervisorId == u.SupervisorId)
+                                                  {
+                                                    <div class="item">
+                                                        <div class="content">
+                                                            <a class="header">Daniel Louise</a>
+                                                        </div>
+                                                    </div>
+                                                  }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+        </div>
+
+      }
+</div>
+<br />

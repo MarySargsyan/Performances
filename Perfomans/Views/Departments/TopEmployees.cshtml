@@ -1,0 +1,53 @@
+﻿@model Perfomans.Models.Departments
+@using Perfomans.Models
+
+<h1>Groups</h1>
+
+<table class="ui compact celled definition table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sourname</th>
+            <th>Perfomances</th>
+            <th>Result</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (User user in ViewBag.topsort)
+        {
+            <tr>
+                <td>
+                    @user.Name
+                </td>
+                <td>
+                    @user.SourName
+                </td>
+                <td>
+                    @foreach (ParametersGroup parametersGroup in ViewBag.ParametersGroup)
+
+                    {
+                        @foreach (Evaluations evaluations in ViewBag.Evaluations)
+
+                        {
+                            if ((parametersGroup.GroupId == ViewBag.GroupId) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
+                            {
+                                @evaluations.Parameter.Name <span>-</span> @evaluations.Mark
+
+                            }
+                        }
+                        <br />
+                    }
+                </td>
+                <td>
+                    @if (user.result != 0)
+                    {@user.result}
+
+                </td>
+            </tr>
+        }
+        @Html.ActionLink("Export data to excel", "Excel", "Departments")
+
+    </tbody>
+</table>

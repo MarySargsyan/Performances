@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +30,9 @@ namespace Perfomans.Models
         public Departments Department { get; set; }
 
         public List<DepartmentHead> DeportamentHead { get; set; }
-
+        [NotMapped]
+        public double result { get; set; }
+        [NotMapped]
+        public int progress { get; set; }
     }
 }

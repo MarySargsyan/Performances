@@ -4,58 +4,65 @@
 <h1>Groups</h1>
 
 <table class="ui compact celled definition table">
-        <thead>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Parameter</th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (Groups groups in Model.Groups)
+        {
+            if (groups.DepartmentId == Model.Id)
+            {
             <tr>
-                <th></th>
-                <th>Parameter</th>
-                <th>Mark</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (Groups groups in Model.Groups)
-             {
-                <tr>
-                    <td>
-                        @groups.Name
-                    </td>
-                    <td>
-                       @foreach (ParametersGroup parametersGroup in ViewBag.ParametersGroups)
+                <td>
+                    @groups.Name
+                </td>
+                <td>
+                    @foreach (ParametersGroup parametersGroup in ViewBag.ParametersGroups)
+                    {
+                        @if (parametersGroup.GroupId == groups.id)
                         {
-                           @if (parametersGroup.GroupId == groups.id)
-                            {
-                              @parametersGroup.Parameters.Name<span>-</span>
-                              @parametersGroup.Mark
+                            @parametersGroup.Parameters.Name<span>-</span>
+                            @parametersGroup.Mark
 
-                            }
-                           <br />
                         }
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Groups", new { id = groups.id, DepId = Model.Id }) |
-                        @Html.ActionLink("Delete", "Delete", "Groups", new { id = groups.id, DepId = Model.Id })
+                        <br />
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Groups", new { id = groups.id, DepId = Model.Id }) |
+                    @Html.ActionLink("Delete", "Delete", "Groups", new { id = groups.id, DepId = Model.Id })
 
-                    </td>
+                </td>
+                <td>
+                    @Html.ActionLink("Show", "GroupsEmployee", "Departments", new { GroupId = groups.id, DepId = Model.Id })
 
-                </tr>             
-             }
-
-        </tbody>
-        <tfoot class="full-width">
-            <tr>
-                <th></th>
-                <th colspan="4">
-                    <div class="ui right floated small">
-                        @using (Html.BeginForm("Create", "Groups", FormMethod.Get))
-                        {
-                            <input type="hidden" Id="DepId" name="DepId" value="@Model.Id">
-                            <button type="submit" class="SecondaryB" style="float:right"><i class="plus icon"></i>Create New</button>
-                        }
-                        @Html.ActionLink("Export to Excel", "Excel", "Groups", new {DepId = Model.Id })
-
-                    </div>
-
-                </th>
+                </td>
             </tr>
-        </tfoot>
-    </table>
+            }
+        }
+
+    </tbody>
+    <tfoot class="full-width">
+        <tr>
+            <th></th>
+            <th colspan="4">
+                <div class="ui right floated small">
+                    @using (Html.BeginForm("Create", "Groups", FormMethod.Get))
+                    {
+                        <input type="hidden" Id="DepId" name="DepId" value="@Model.Id">
+                        <button type="submit" class="SecondaryB" style="float:right"><i class="plus icon"></i>Create New</button>
+                    }
+                    @Html.ActionLink("Export to Excel", "Excel", "Groups", new { DepId = Model.Id })
+
+                </div>
+
+            </th>
+        </tr>
+    </tfoot>
+</table>

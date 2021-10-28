@@ -1,33 +1,6 @@
-﻿@model Perfomans.Models.Departments
-@using Perfomans.Models
-
-<div style="margin-top:1.5em" class="container">
+﻿<div class="container">
     <div class="row">
-        <div class="col">
-            @using (Html.BeginForm("ProgressUp", "Departments", FormMethod.Get))
-            {
-                <input type="hidden" id="DepId" name="DepId" value="@Model.Id" />
-                <button type="submit" style="width:100%; display:inline" class="SecondaryB">
-                    <i class="chevron up icon"></i>
-                </button>
-            }
-        </div>
-        <div class="col">
-
-            @using (Html.BeginForm("ProgressDown", "Departments", FormMethod.Get))
-            {
-                <input type="hidden" id="DepId" name="DepId" value="@Model.Id" />
-                <button style="width:100%; display:inline" type="submit" class="SecondaryB">
-                    <i class="chevron down icon"></i>
-                </button>
-            }
-        </div>
-        <div class="col">
-
-        </div>
-    </div>
-</div>
-
+        <div class="col-sm-10">
             <table class="ui compact celled table">
                 <thead>
                     <tr>
@@ -41,7 +14,7 @@
 
                     @foreach (User user in Model.User)
                     {
-                        if (user.DepartmentId == Model.Id)
+                        if (user.progress == 1)
                         {
                         <tr>
                             <td>
@@ -66,18 +39,8 @@
                                 }
                             </td>
                             <td>
-                                @if (@user.progress == -1)
-                                {
-                                    <i class="chevron down icon"></i>
-                                }
-                                @if (@user.progress == 1)
-                                {
-                                    <i class="chevron up icon"></i>
-                                }
-                                @if (@user.progress == 0)
-                                {
-                                    <i class="minus icon"></i>
-                                }
+                               <i class="chevron up icon"></i>
+
                             </td>
 
                         </tr>
@@ -86,3 +49,9 @@
 
                 </tbody>
             </table>
+        </div>
+        <div class="col-sm-2">
+
+        </div>
+    </div>
+</div>

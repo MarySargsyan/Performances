@@ -101,7 +101,7 @@ namespace Perfomans.Controllers
         public IActionResult Excel(int DepId)
         {
             Departments departments =  _context.Departments.Find(DepId);
-
+            departments.Groups = _context.Groups.ToList();
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Groups");
@@ -109,7 +109,7 @@ namespace Perfomans.Controllers
                 worksheet.Cell(currentRow, 1).Value = "Id";
                 worksheet.Cell(currentRow, 2).Value = "Name";
                 worksheet.Cell(currentRow, 3).Value = "Parameters";
-                foreach (Groups groups in _context.Groups.ToList())
+                foreach (Groups groups in departments.Groups)
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = groups.id;
@@ -125,7 +125,7 @@ namespace Perfomans.Controllers
                                 {
                                     if (parameters.Id == groupsParameters.ParameterId)
                                     {
-                                        Parameters = Parameters  + parameters.Name + ", ";
+                                        Parameters = Parameters  + parameters.Name + "\n";
 
                                     }
                                 }
@@ -143,7 +143,7 @@ namespace Perfomans.Controllers
                     return File(
                         content,
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "users.xlsx");
+                        "Groups.xlsx");
                 }
             }
         }

@@ -12,6 +12,8 @@
     <tbody>
         @foreach (DepartmentParameters deparameters in Model.DepartmentParameters)
         {
+            if (deparameters.DepartmentId == Model.Id)
+            {
             <tr>
 
                 @foreach (Parameters parameters in ViewBag.Parameters)
@@ -41,8 +43,8 @@
                     }
                 </td>
             </tr>
-
-         }
+            }
+        }
 
     </tbody>
         <tfoot class="full-width">
