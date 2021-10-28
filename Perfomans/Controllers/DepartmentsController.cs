@@ -10,17 +10,23 @@ using Perfomans.Models;
 using System.Web;
 using ClosedXML.Excel;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace Perfomans.Controllers
 {
     public class DepartmentsController : Controller
     {
+
         private readonly ApplicationContext _context;
 
         public DepartmentsController(ApplicationContext context)
         {
             _context = context;
         }
+
+        [Authorize(Roles = "admin")]
 
         public ActionResult Index()
         {
@@ -36,10 +42,8 @@ namespace Perfomans.Controllers
             ViewBag.Evaluations = GetLastEvaluations();
             ViewBag.Parameters = _context.Parameters.ToList();
             ViewBag.ParametersGroups = _context.ParametersGroups.ToList();
-            ViewBag.Heads = _context.User.ToList();
             Departments departments = _context.Departments.Find(id);
             departments.DepartmentParameters = _context.DepartmentParameters.ToList();
-            departments.Head = _context.Heads.ToList();
             departments.Groups = _context.Groups.ToList();
             departments.User = _context.User.ToList();
             foreach (User user in departments.User)

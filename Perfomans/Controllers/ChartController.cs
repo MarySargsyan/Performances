@@ -25,7 +25,6 @@ namespace Perfomans.Controllers
         public IActionResult Index()
         {
             ViewBag.AllUsers = _context.User.ToList();
-            ViewBag.Head = _context.Heads.ToList();
             return View(_context.Departments.ToList());
         }
     }

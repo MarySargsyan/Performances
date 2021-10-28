@@ -10,20 +10,12 @@
                     <h2 class="ui centered header">
                         @item.Name
                     </h2>
-
-                    @foreach (DepartmentHead h in ViewBag.Head)
+                    @foreach (User u in ViewBag.AllUsers)
                     {
-                        if (h.DepartmentId == item.Id)
+                        if ((u.DepartmentId == item.Id) & (u.RoleId == 4))
                         {
-                            DepartmentHead head = h;
-                            @foreach (User u in ViewBag.AllUsers)
-                            {
-                                if (head.HeadId == u.Id)
-                                {
-                                    <h3 class="ui center aligned sub header">Head : @u.Name</h3>
+                            <h3 class="ui center aligned sub header">Head of department : @u.Name</h3>
 
-                                }
-                            }
                         }
                     }
                 </div>

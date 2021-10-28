@@ -50,23 +50,16 @@
                         </div>
                     </div>
                     <div class="sub content">
-                        <div style="display:inline" class="header">Head :</div>
-                                
-                                @foreach (DepartmentHead h in Model.Head)
-                                {
-                                    if (h.DepartmentId == Model.Id)
-                                    {
-                                        DepartmentHead head = h;
-                                        @foreach (User u in ViewBag.Heads)
-                                        {
-                                            if(head.HeadId == u.Id)
-                                            {
-                                                @u.Name
-                                            }
-                                        }
-                                    }
-                                }
+                        @foreach (User u in Model.User)
+                        {
+                            if ((u.DepartmentId == Model.Id) & (u.RoleId == 4))
+                            {
+                                <h3 class="ui center aligned sub header">Head of department : @u.Name</h3>
+
+                            }
+                        }
                     </div>
+
                     <div style="margin-left:5%" class="extra content">
                         <div class="ui  buttons">
                             <a style="color: #54354F" class="ui  button" asp-action="Edit" asp-route-id="@Model.Id"><i class="edit icon"></i>Edit</a> |
