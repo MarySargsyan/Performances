@@ -13,7 +13,6 @@ namespace Perfomans.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<DepartmentParameters> DepartmentParameters { get; set; }
-        public DbSet<DepartmentHead> Heads { get; set; }
         public DbSet<Parameters> Parameters { get; set; }
         public DbSet<ParametersGroup> ParametersGroups { get; set; }
         public DbSet<Groups> Groups { get; set; }
@@ -35,13 +34,11 @@ namespace Perfomans.Models
             modelBuilder.Entity<ParametersGroup>().
                 HasOne(pi => pi.Groups).WithMany(pi => pi.ParametersGroups).HasForeignKey(p => p.GroupId);
 
-            modelBuilder.Entity<DepartmentHead>().HasKey(d => new { d.DepartmentId, d.HeadId });
-            modelBuilder.Entity<DepartmentHead>().HasOne(d => d.Departments).WithMany(d => d.Head).HasForeignKey(d => d.DepartmentId);
-            modelBuilder.Entity<DepartmentHead>().HasOne(d => d.Head).WithMany(d => d.DeportamentHead).HasForeignKey(d => d.HeadId);
-
 
             string adminRoleName = "admin";
             string userRoleName = "user";
+            string TLRoleName = "Teamlead";
+            string HeadRoleName = "Head";
 
             string adminEmail = "admin@mail.ru";
             string adminPassword = "123456";
@@ -51,24 +48,36 @@ namespace Perfomans.Models
             string devdep = "Developing";
             string GroupName = "Group1";
 
+            string DefState = "Default";
+            string FireState = "Fired";
 
             Role adminRole = new Role { Id = 1, Name = adminRoleName };
             Role userRole = new Role { Id = 2, Name = userRoleName };
+            Role TLRole = new Role { Id = 3, Name = TLRoleName };
+            Role HeadRole = new Role { Id = 4, Name = HeadRoleName };
 
             Departments departments = new Departments { Id = 1, Name = devdep };
             Groups groups = new Groups { id = 1, Name = GroupName, DepartmentId = departments.Id };
 
-            //State state = new State { Id = 1, Name = DefState };
-            //State state1 = new State { Id = 1, Name = FireState };
+            State state = new State { Id = 1, Name = DefState };
+            State state1 = new State { Id = 2, Name = FireState };
 
 
 
             modelBuilder.Entity<Departments>().HasData(new Departments[] { departments });
             modelBuilder.Entity<Groups>().HasData(new Groups[] { groups });
-            modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole });
-            User adminUser = new User { Id = 1, Name = adminName, SourName = adminSourName, Email = adminEmail, Password = adminPassword, RoleId = adminRole.Id,
+            modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole, TLRole, HeadRole });
+            modelBuilder.Entity<State>().HasData(new State[] { state, state1 });
+
+            User adminUser = new User {
+                Id = 1,
+                Name = adminName,
+                SourName = adminSourName,
+                Email = adminEmail,
+                Password = adminPassword,
+                RoleId = adminRole.Id,
                 DepartmentId = departments.Id,
-                //StateId = state.Id,
+                StateId = state.Id,
                 SupervisorId = 1
             };
             modelBuilder.Entity<User>().HasData(new User[] { adminUser });

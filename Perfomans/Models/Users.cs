@@ -29,7 +29,6 @@ namespace Perfomans.Models
         public int? DepartmentId { get; set; }
         public Departments Department { get; set; }
 
-        public List<DepartmentHead> DeportamentHead { get; set; }
         [NotMapped]
         public double result { get; set; }
         [NotMapped]
