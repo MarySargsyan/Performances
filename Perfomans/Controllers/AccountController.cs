@@ -39,7 +39,7 @@ namespace Perfomans.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError("", "Login or password is not corrent");
+                ModelState.AddModelError("", "Login or password is not correct");
             }
             return View(model);
         }

@@ -11,7 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
+using Perfomans.Repository;
+using Perfomans.Service;
 
 namespace Perfomans
 {
@@ -26,6 +27,13 @@ namespace Perfomans
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<IParametersRepository, ParametersRepository>();
+            services.AddTransient<IParametersService, Parametersservice>();
+
+
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -7,23 +7,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Perfomans.Models;
+using Perfomans.Service;
 
 namespace Perfomans.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ApplicationContext _context;
+        private readonly IUserService _service;
 
-        public UsersController(ApplicationContext context)
+        public UsersController(ApplicationContext context, IUserService service)
         {
             _context = context;
+            _service = service;
         }
         [Authorize(Roles = "admin")]
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationContext = _context.User.Include(u => u.Department).Include(u => u.Role).Include(u => u.Supervisor).Include(u => u.state);
-            return View(await applicationContext.ToListAsync());
+            var users = _service.AllUsers();
+            return View(users);
         }
 
         public IActionResult Create()
@@ -37,12 +40,11 @@ namespace Perfomans.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,SourName,Email,Password,RoleId,StateId,SupervisorId,DepartmentId")] User user)
+        public IActionResult Create([Bind("Id,Name,SourName,Email,Password,RoleId,StateId,SupervisorId,DepartmentId")] User user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                _service.Insert(user);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", user.DepartmentId);
@@ -52,18 +54,9 @@ namespace Perfomans.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+          User user = _service.GetById(id);
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", _context.Departments.Select(x => x.Id).FirstOrDefault());
             ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", _context.Roles.Select(x => x.Id).FirstOrDefault());
             ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", _context.User.Select(x => x.Id).FirstOrDefault());
@@ -73,10 +66,9 @@ namespace Perfomans.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,SourName,Email,Password,RoleId,StateId,SupervisorId,DepartmentId")] User user)
+        public IActionResult Edit(int id, [Bind("Id,Name,SourName,Email,Password,RoleId,StateId,SupervisorId,DepartmentId")] User user)
         {
-             _context.Update(user);
-             await _context.SaveChangesAsync();
+            _service.Update(user);
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", user.DepartmentId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", user.RoleId);
             ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", user.SupervisorId);
@@ -84,25 +76,18 @@ namespace Perfomans.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            var user = await _context.User.Include(u => u.Department).Include(u => u.Role).Include(u => u.Supervisor).Include(u => u.state).FirstOrDefaultAsync(m => m.Id == id);
+            var user = _service.GetUserNmodelsById(id);
             return View(user);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
+            _service.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
         }
     }
 }
