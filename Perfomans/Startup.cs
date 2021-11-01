@@ -33,6 +33,15 @@ namespace Perfomans
             services.AddTransient<IParametersRepository, ParametersRepository>();
             services.AddTransient<IParametersService, Parametersservice>();
 
+            services.AddTransient<IGroupsRepository, GroupsRepository>();
+            services.AddTransient<IGroupService, GroupService>();
+
+            services.AddTransient<IEvalRepository, EvalRepository>();
+            services.AddTransient<IEvalService, EvalService>();
+
+            services.AddTransient<IDepParamRepository, DepParamRepository>();
+            services.AddTransient<IDepParamService, DepParamService>();
+
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

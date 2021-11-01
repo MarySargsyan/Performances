@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Perfomans.Models;
+using Perfomans.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace Perfomans.Controllers
     public class DepParam : Controller
     {
         private readonly ApplicationContext _context;
+        private readonly IDepParamService _service;
 
-        public DepParam(ApplicationContext context)
+        public DepParam(ApplicationContext context, IDepParamService service)
         {
             _context = context;
+            _service = service;
         }
 
         public ActionResult Create(int depId)
@@ -27,12 +30,11 @@ namespace Perfomans.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Id, ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters, int? DepId)
+        public ActionResult Create([Bind("ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters, int? DepId)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(departmentParameters);
-                _context.SaveChanges();
+                _service.Insert(departmentParameters);
             }
             return RedirectToAction("DepartmentPage", "Departments", new {id = departmentParameters.DepartmentId });
 
@@ -41,22 +43,14 @@ namespace Perfomans.Controllers
         public ActionResult Edit(int DepartmentId, int ParameterId)
         {
             ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
-            foreach (DepartmentParameters department in _context.DepartmentParameters)
-            {
-                if ((department.DepartmentId == DepartmentId) & (department.ParameterId == ParameterId))
-                {
-                    return View(department);
-                }
-            }
-            return View();
+            return View(_service.GetById(DepartmentId, ParameterId));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind("Id, ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters)
+        public ActionResult Edit([Bind("ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters)
         {
-            _context.Update(departmentParameters);
-             _context.SaveChanges();
+            _service.Update(departmentParameters);
             ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
             return RedirectToAction("DepartmentPage", "Departments", new { id = departmentParameters.DepartmentId });
         }
@@ -64,31 +58,15 @@ namespace Perfomans.Controllers
         public ActionResult Delete(int DepartmentId, int ParameterId)
         {
             ViewBag.ParameterName = _context.Parameters.Find(ParameterId).Name;
-            foreach (DepartmentParameters department in _context.DepartmentParameters)
-            {
-                if ((department.DepartmentId == DepartmentId) & (department.ParameterId == ParameterId))
-                {
-                  return View(department);
-                }
-            }
-            return View();
-
+            return View(_service.GetById(DepartmentId, ParameterId));
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int DepartmentId, int ParameterId)
         {
-           foreach(DepartmentParameters department in _context.DepartmentParameters)
-           {
-                if ((department.DepartmentId == DepartmentId) & (department.ParameterId == ParameterId))
-                {
-                    _context.DepartmentParameters.Remove(department);
-                }
-           }
-            _context.SaveChanges();
+            _service.Delete(DepartmentId, ParameterId);
             return RedirectToAction("DepartmentPage", "Departments", new { id = DepartmentId });
-
         }
     }
 }

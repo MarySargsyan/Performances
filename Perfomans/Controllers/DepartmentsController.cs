@@ -32,11 +32,6 @@ namespace Perfomans.Controllers
         {
             return View(_context.Departments.ToList());
         }
-         public ActionResult GroupsIndex()
-        {
-            return View(_context.Groups.ToList());
-        }
-
         public ActionResult DepartmentPage(int? id)
         {
             ViewBag.Evaluations = GetLastEvaluations();
@@ -73,16 +68,7 @@ namespace Perfomans.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var departments = await _context.Departments.FindAsync(id);
-            if (departments == null)
-            {
-                return NotFound();
-            }
             return View(departments);
         }
 
@@ -93,22 +79,9 @@ namespace Perfomans.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
                     _context.Update(departments);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DepartmentsExists(departments.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(departments);
