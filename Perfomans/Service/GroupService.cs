@@ -27,13 +27,13 @@ namespace Perfomans.Service
 
         public void EditParametersGroup(ParametersGroup parametersGroup) => _repository.EditParametersGroup(parametersGroup);
 
-        public XLWorkbook Excel(int DepId) => _repository.Excel(DepId);
-
         public Groups GetById(int? id) => _repository.GetById(id);
 
         public ParametersGroup GetGroupParam(int ParametertId, int GroupId) => _repository.GetGroupParam(ParametertId, GroupId);
         public void Insert(Groups groups) => _repository.Insert(groups);
 
         public Groups Update(Groups groups, int[] selectedItems, int DepId) => _repository.Update(groups, selectedItems, DepId);
+
+        public void WorkbookCreate(XLWorkbook workbook, int DepId) => _repository.WorkbookCreate(workbook, DepId);
     }
 }

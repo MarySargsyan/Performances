@@ -37,8 +37,6 @@ namespace Perfomans.Controllers
                 return RedirectToAction("Index", "Evaluations");
 
             }
-
-
             else
             {
                 return Content($"employee");

@@ -4,9 +4,10 @@
 <div style="margin-top:1.5em" class="container">
     <div class="row">
         <div class="col">
-            @using (Html.BeginForm("ProgressUp", "Departments", FormMethod.Get))
+            @using (Html.BeginForm("Progress", "Departments", FormMethod.Get))
             {
                 <input type="hidden" id="DepId" name="DepId" value="@Model.Id" />
+                <input type="hidden" id="Direction" name="Direction" value="1" />
                 <button type="submit" style="width:100%; display:inline" class="SecondaryB">
                     <i class="chevron up icon"></i>
                 </button>
@@ -14,8 +15,9 @@
         </div>
         <div class="col">
 
-            @using (Html.BeginForm("ProgressDown", "Departments", FormMethod.Get))
+            @using (Html.BeginForm("Progress", "Departments", FormMethod.Get))
             {
+                <input type="hidden" id="Direction" name="Direction" value="0" />
                 <input type="hidden" id="DepId" name="DepId" value="@Model.Id" />
                 <button style="width:100%; display:inline" type="submit" class="SecondaryB">
                     <i class="chevron down icon"></i>

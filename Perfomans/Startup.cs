@@ -42,6 +42,9 @@ namespace Perfomans
             services.AddTransient<IDepParamRepository, DepParamRepository>();
             services.AddTransient<IDepParamService, DepParamService>();
 
+            services.AddTransient<IDepartmentsRepository, DepartmentsRepository>();
+            services.AddTransient<IDepartmentsService, DepartmentsService>();
+
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

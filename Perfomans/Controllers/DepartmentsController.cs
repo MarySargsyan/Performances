@@ -12,330 +12,115 @@ using ClosedXML.Excel;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-
+using Perfomans.Service;
 
 namespace Perfomans.Controllers
 {
     public class DepartmentsController : Controller
     {
+        private readonly IDepartmentsService _service;
+        private readonly IGroupService _groupService;
 
-        private readonly ApplicationContext _context;
-
-        public DepartmentsController(ApplicationContext context)
+        public DepartmentsController(ApplicationContext context, IDepartmentsService service, IGroupService groupService)
         {
-            _context = context;
+            _service = service;
+            _groupService = groupService;
         }
 
         [Authorize(Roles = "admin")]
 
         public ActionResult Index()
         {
-            return View(_context.Departments.ToList());
+            return View(_service.AllDepartments());
         }
         public ActionResult DepartmentPage(int? id)
         {
-            ViewBag.Evaluations = GetLastEvaluations();
-            ViewBag.Parameters = _context.Parameters.ToList();
-            ViewBag.ParametersGroups = _context.ParametersGroups.ToList();
-            Departments departments = _context.Departments.Find(id);
-            departments.DepartmentParameters = _context.DepartmentParameters.ToList();
-            departments.Groups = _context.Groups.ToList();
-            departments.User = _context.User.ToList();
-            foreach (User user in departments.User)
-            {
-                user.progress = GetUserProgress(user);
-            }
-            return View(departments);
+            ViewBag.Evaluations = _service.GetLastEvaluations();
+            ViewBag.Parameters = _groupService.AllParameters();
+            ViewBag.ParametersGroups = _groupService.AllParametersGroups();
+
+            return View(_service.DepEmployeesProgreses(id));
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create()=> View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Departments departments)
+        public IActionResult Create([Bind("Id,Name")] Departments departments)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(departments);
-                await _context.SaveChangesAsync();
+                _service.Insert(departments);
                 return RedirectToAction(nameof(Index));
             }
             return View(departments);
         }
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            var departments = await _context.Departments.FindAsync(id);
-            return View(departments);
-        }
+        public IActionResult Edit(int? id)=> View(_service.GetById(id));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Departments departments)
+        public IActionResult Edit(int id, [Bind("Id,Name")] Departments departments)
         {
-
             if (ModelState.IsValid)
             {
-                    _context.Update(departments);
-                    await _context.SaveChangesAsync();
-
+                _service.Update(departments);
                 return RedirectToAction(nameof(Index));
             }
             return View(departments);
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            var departments = await _context.Departments
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            return View(departments);
-        }
+        public IActionResult Delete(int? id)=>View(_service.GetById(id));
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var departments = await _context.Departments.FindAsync(id);
-            _context.Departments.Remove(departments);
-            await _context.SaveChangesAsync();
+            _service.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-        public ActionResult EmployeePartial()
-        {
-            return PartialView();
-        }
+        public ActionResult EmployeePartial()=>PartialView();
         public ActionResult GroupsEmployee(int GroupId, int DepId)
         {        
-            Departments departments = _context.Departments.Find(DepId);
-            ViewBag.Group = _context.Groups.Find(GroupId);
-            return View(departments);
+            ViewBag.Group = _groupService.GetById(GroupId);
+            return View(_service.GetById(DepId));
         }
-        public ActionResult ParametersPartial()
-        {
-            ViewBag.DepartmentParameters = _context.DepartmentParameters.ToList();
-            ViewBag.Parameters = _context.Parameters.ToList();
-            return PartialView();
-        }
-        public ActionResult GroupsPartial()
-        {
-            ViewBag.Parameters = _context.Parameters.ToList();
-            ViewBag.Groups = _context.Groups.ToList();
-            return PartialView();
-        }
-
-        public static List<User> UsersforExport = new List<User>(); 
-        public static List<ParametersGroup> ParametersGroupsForExport = new List<ParametersGroup>();
-        public static int GroupIdForExport;
+        public ActionResult ParametersPartial()=> PartialView();
+        public ActionResult GroupsPartial()=>PartialView();
         public ActionResult TopEmployees(int EmployeeCount, int GroupId, int DepId)
-        {
-            
-            Departments departments = _context.Departments.Find(DepId);
-            departments.DepartmentParameters = _context.DepartmentParameters.ToList();
-            departments.User = _context.User.ToList();
-
-            ViewBag.ParametersGroup = _context.ParametersGroups.Where(p => p.GroupId == GroupId).ToList();
+        {    
+            ViewBag.ParametersGroup = _groupService.AllParametersGroups().Where(p => p.GroupId == GroupId).ToList();
             ViewBag.GroupId = GroupId;
-            GroupIdForExport = GroupId;
-            ViewBag.Parameters = _context.Parameters.ToList();
-
-            ViewBag.Evaluations = GetLastEvaluations();
-            foreach(User user in departments.User)
-            {
-                user.result = 0.0;
-                foreach(ParametersGroup parametersGroup in ViewBag.ParametersGroup)
-                        {
-                    foreach (Evaluations evaluations in ViewBag.Evaluations)
-                    {
-                        if ((parametersGroup.GroupId == ViewBag.GroupId) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
-                        {
-                            user.result += (evaluations.Parameter.Coefficient * evaluations.Mark);
-                        }
-                    }
-
-                }
-            }
-          var topsort = from user in departments.User orderby user.result descending select user;
-           List<User> CountTop = new List<User>();
-
-           foreach(User u in topsort)
-           {
-             CountTop.Add(u);
-             if (CountTop.Count == EmployeeCount){ break;}
-           }
+            ViewBag.Parameters = _groupService.AllParameters();
+            ViewBag.Evaluations = _service.GetLastEvaluations();
+            Departments departments = _service.GetById(DepId);
+            List<User> CountTop = _service.CountTop(DepId, GroupId, EmployeeCount);
             ViewBag.topsort = CountTop;
-            UsersforExport = CountTop;
-            ParametersGroupsForExport = _context.ParametersGroups.Where(p => p.GroupId == GroupId).ToList();
             return View(departments);
-
         }
         public IActionResult Excel()
         {
-            ViewBag.Parameters = _context.Parameters.ToList();
-
+            ViewBag.Parameters = _groupService.AllParameters();
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Top_Emplyee");
-                var currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "Name";
-                worksheet.Cell(currentRow, 2).Value = "SourName";
-                worksheet.Cell(currentRow, 3).Value = "Parameters";
-                worksheet.Cell(currentRow, 4).Value = "Result";
-                foreach (User user in UsersforExport)
-                {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = user.Name;
-                    worksheet.Cell(currentRow, 2).Value = user.SourName;
-                    string Parameters = " ";
-
-                    foreach(ParametersGroup parametersGroup in ParametersGroupsForExport)
-                    {
-                        foreach(Evaluations evaluations in GetLastEvaluations())
-                        {
-                            if ((parametersGroup.GroupId == GroupIdForExport) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
-                            {
-                              Parameters = Parameters +  evaluations.Parameter.Name + "- " +  evaluations.Mark + "\n";
-
-                            }
-                        }
-                    }
-                    worksheet.Cell(currentRow, 3).Value = Parameters;
-                    worksheet.Cell(currentRow, 4).Value = user.result;
-                }
-
+                _service.WorkbookCreate(workbook);
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
-
                     return File(
-                        content,
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "Top_Emplyee.xlsx");
+                    content,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","Top_Emplyee.xlsx");
                 }
             }
         }
-        public ActionResult ProgressUp(int DepId)
+        public ActionResult Progress(int DepId, int Direction)
         {
-            Departments departments = _context.Departments.Find(DepId);
-            departments.DepartmentParameters = _context.DepartmentParameters.ToList();
-            departments.User = _context.User.ToList();
-            foreach(User u in departments.User)
-            {
-                u.progress = GetUserProgress(u);
-            }
-            ViewBag.Parameters = _context.Parameters.ToList();
-            ViewBag.Evaluations = GetLastEvaluations();
-
+            if (Direction == 1) { ViewBag.Direction = 1;}
+            else {ViewBag.Direction = 0;}
+            Departments departments = _service.DepEmployeesProgreses(DepId);
+            ViewBag.Parameters = _groupService.AllParameters();
+            ViewBag.Evaluations = _service.GetLastEvaluations();
             return View(departments);
-
-        }
-        public ActionResult ProgressDown(int DepId)
-        {
-            Departments departments = _context.Departments.Find(DepId);
-            departments.DepartmentParameters = _context.DepartmentParameters.ToList();
-            departments.User = _context.User.ToList();
-            foreach(User u in departments.User)
-            {
-                u.progress = GetUserProgress(u);
-            }
-            ViewBag.Parameters = _context.Parameters.ToList();
-            ViewBag.Evaluations = GetLastEvaluations();
-
-            return View(departments);
-
-        }
-
-        private bool DepartmentsExists(int id)
-        {
-            return _context.Departments.Any(e => e.Id == id);
-        }
-        public List<Evaluations> GetLastEvaluations()//это легко в сервмс можно засунуть
-        {
-            List<Evaluations> lastevaluations = new List<Evaluations>();
-            foreach (Evaluations evaluations in _context.Evaluations.ToList())
-            {
-                lastevaluations.Add(evaluations);
-            }
-            foreach (Evaluations laste in lastevaluations.ToList())
-            {
-                foreach (Evaluations e in _context.Evaluations.ToList())
-                {
-                    if ((e.UserId == laste.UserId) & (e.ParameterId == laste.ParameterId) & (e.Id < laste.Id))
-                    {
-                        lastevaluations.Remove(e);
-                    }
-                }
-            }
-            return (lastevaluations);
-        }
-        public List<Evaluations> GetOldEvaluations()
-        {
-            List<Evaluations> oldevaluations = new List<Evaluations>();
-            foreach (Evaluations evaluations in _context.Evaluations.ToList())
-            {
-                oldevaluations.Add(evaluations);
-            }
-            foreach (Evaluations e in GetLastEvaluations())
-            {
-                 oldevaluations.Remove(e);
-            }
-            return (oldevaluations);
-
-        }
-        public double GetUsersEvaluationAvg(User user)
-        {
-            double Avg = 0.0;
-            double count = 0.0;
-            double sum = 0.0;
-            foreach (Evaluations e in GetOldEvaluations())
-            {
-                if(e.UserId == user.Id)
-                {
-                    sum += e.Mark;
-                    count += 1;
-                }
-            }
-            Avg = sum / count;
-            return Avg;
-        }
-        public double GetUserLastEvaluationAvg(User user)
-        {
-            double Avg = 0.0;
-            double count = 0.0;
-            double sum = 0.0;
-            foreach (Evaluations e in GetLastEvaluations())
-            {
-                if(e.UserId == user.Id)
-                {
-                    sum += e.Mark;
-                    count += 1;
-                }
-            }
-            Avg = sum / count;
-            return Avg;
-        }
-        public int GetUserProgress(User user)
-        {
-            user.progress = 0;
-
-                    if (GetUsersEvaluationAvg(user) < GetUserLastEvaluationAvg(user))
-                    {
-                        user.progress += 1;
-                    }
-                    else if (GetUsersEvaluationAvg(user) > GetUserLastEvaluationAvg(user))
-                    {
-                        user.progress -= 1;
-                    }
-                    else
-                    {
-                        user.progress -= 0;
-                    }
-
-            return user.progress;
         }
     }
 }

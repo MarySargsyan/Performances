@@ -17,7 +17,7 @@ namespace Perfomans.Repository
         void Insert(Groups groups);
         Groups Update(Groups groups, int[] selectedItems, int DepId);
         void Delete(int? id);
-        XLWorkbook Excel(int DepId);
+        void WorkbookCreate(XLWorkbook workbook, int DepId);
         ParametersGroup GetGroupParam(int ParametertId, int GroupId);
         void EditParametersGroup(ParametersGroup parametersGroup);
     }

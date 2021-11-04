@@ -27,15 +27,8 @@ namespace Perfomans.Controllers
             return View(parameters);
         }
 
-        public IActionResult Details(int? id)
-        {
-            return View(_service.GetById(id));
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Details(int? id)=> View(_service.GetById(id));
+        public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -48,10 +41,7 @@ namespace Perfomans.Controllers
             }
             return View(parameters);
         }
-        public IActionResult Edit(int? id)
-        {
-            return View(_service.GetById(id));
-        }
+        public IActionResult Edit(int? id)=> View(_service.GetById(id));
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,Name,Coefficient,Mark_1_description,Mark_2_description,Mark_3_description,Mark_4_description,Mark_5_description")] Parameters parameters)
@@ -63,11 +53,7 @@ namespace Perfomans.Controllers
             }
             return View(parameters);
         }
-
-        public IActionResult Delete(int? id)
-        {
-            return View(_service.GetById(id));
-        }
+        public IActionResult Delete(int? id)=> View(_service.GetById(id));
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -76,6 +62,5 @@ namespace Perfomans.Controllers
             _service.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

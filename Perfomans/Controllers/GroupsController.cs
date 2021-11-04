@@ -80,52 +80,14 @@ namespace Perfomans.Controllers
 
         public IActionResult Excel(int DepId)
         {
-            //Departments departments =  _context.Departments.Find(DepId);
-            //departments.Groups = _context.Groups.ToList();
-
-            //var worksheet = workbook.Worksheets.Add("Groups");
-            //var currentRow = 1;
-            //worksheet.Cell(currentRow, 1).Value = "Id";
-            //worksheet.Cell(currentRow, 2).Value = "Name";
-            //worksheet.Cell(currentRow, 3).Value = "Parameters";
-            //foreach (Groups groups in departments.Groups)
-            //{
-            //    currentRow++;
-            //    worksheet.Cell(currentRow, 1).Value = groups.id;
-            //    worksheet.Cell(currentRow, 2).Value = groups.Name;
-            //    string Parameters = " ";
-            //    if (groups.DepartmentId == DepId)
-            //    {
-            //        foreach (ParametersGroup groupsParameters in _context.ParametersGroups.ToList())
-            //        {
-            //            if (groupsParameters.GroupId == groups.id)
-            //            {
-            //                foreach (Parameters parameters in _context.Parameters.ToList())
-            //                {
-            //                    if (parameters.Id == groupsParameters.ParameterId)
-            //                    {
-            //                        Parameters = Parameters  + parameters.Name + "\n";
-
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    worksheet.Cell(currentRow, 3).Value = Parameters;
-            //}
-
-            XLWorkbook workbook = _service.Excel(DepId);
-            using (workbook)
+            using (var workbook = new XLWorkbook())
             {
+                _service.WorkbookCreate(workbook, DepId);
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
-
-                    return File(
-                        content,
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "Groups.xlsx");
+                    return File( content,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","Groups.xlsx");
                 }
             }
         }

@@ -47,47 +47,6 @@ namespace Perfomans.Repository
             _context.SaveChanges();
         }
 
-        public XLWorkbook Excel(int DepId)
-        {
-            Departments departments = _context.Departments.Find(DepId);
-            departments.Groups = _context.Groups.ToList();
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Groups");
-                var currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "Id";
-                worksheet.Cell(currentRow, 2).Value = "Name";
-                worksheet.Cell(currentRow, 3).Value = "Parameters";
-                foreach (Groups groups in departments.Groups)
-                {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = groups.id;
-                    worksheet.Cell(currentRow, 2).Value = groups.Name;
-                    string Parameters = " ";
-                    if (groups.DepartmentId == DepId)
-                    {
-                        foreach (ParametersGroup groupsParameters in _context.ParametersGroups.ToList())
-                        {
-                            if (groupsParameters.GroupId == groups.id)
-                            {
-                                foreach (Parameters parameters in _context.Parameters.ToList())
-                                {
-                                    if (parameters.Id == groupsParameters.ParameterId)
-                                    {
-                                        Parameters = Parameters + parameters.Name + "\n";
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    worksheet.Cell(currentRow, 3).Value = Parameters;
-                }
-                return workbook;
-            }
-
-        }
-
         public Groups GetById(int? id)
         {
             return _context.Groups.Find(id);
@@ -134,5 +93,42 @@ namespace Perfomans.Repository
             _context.SaveChanges();
             return editgroup;
         }
+
+        public void WorkbookCreate(XLWorkbook workbook, int DepId)
+        {
+            Departments departments = _context.Departments.Include(d => d.DepartmentParameters).Include(d => d.Groups).Include(d => d.User).FirstOrDefault(d => d.Id == DepId);
+
+            var worksheet = workbook.Worksheets.Add("Groups");
+            var currentRow = 1;
+            worksheet.Cell(currentRow, 1).Value = "Id";
+            worksheet.Cell(currentRow, 2).Value = "Name";
+            worksheet.Cell(currentRow, 3).Value = "Parameters";
+            foreach (Groups groups in departments.Groups)
+            {
+                currentRow++;
+                worksheet.Cell(currentRow, 1).Value = groups.id;
+                worksheet.Cell(currentRow, 2).Value = groups.Name;
+                string Parameters = " ";
+                if (groups.DepartmentId == DepId)
+                {
+                    foreach (ParametersGroup groupsParameters in _context.ParametersGroups.ToList())
+                    {
+                        if (groupsParameters.GroupId == groups.id)
+                        {
+                            foreach (Parameters parameters in _context.Parameters.ToList())
+                            {
+                                if (parameters.Id == groupsParameters.ParameterId)
+                                {
+                                    Parameters = Parameters + parameters.Name + "\n";
+
+                                }
+                            }
+                        }
+                    }
+                }
+                worksheet.Cell(currentRow, 3).Value = Parameters;
+            }
+        }
+
     }
 }
