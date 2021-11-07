@@ -41,7 +41,7 @@ namespace Performances.Tests
             return departments;
         }
         [Fact]
-        public void AddUserReturnsViewResultWithUserModel()
+        public void AddParameterReturnsViewResultWithParameterModel()
         {
             // Arrange
             var mock = new Mock<IParametersService>();
@@ -89,6 +89,25 @@ namespace Performances.Tests
 
             // Act
             var result = controller.Delete(testParamId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Parameters>(viewResult.ViewData.Model);
+            Assert.Equal(testParamId, model.Id);
+        }
+        [Fact]
+        public void EditParameterReturnsEditParameter()
+        {
+            // Arrange
+            int testParamId = 1;
+            var mock = new Mock<IParametersService>();
+            mock.Setup(repo => repo.GetById(testParamId))
+                .Returns(GetTestParameters().FirstOrDefault(p => p.Id == testParamId));
+            var controller = new ParametersController(mock.Object);
+
+
+            // Act
+            var result = controller.Edit(testParamId);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);

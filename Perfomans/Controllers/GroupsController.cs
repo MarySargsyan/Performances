@@ -14,11 +14,9 @@ namespace Perfomans.Controllers
     public class GroupsController : Controller
     {
         private readonly IGroupService _service;
-        private readonly ApplicationContext _context;
-        public GroupsController(IGroupService service, ApplicationContext context)
+        public GroupsController(IGroupService service)
         {
             _service = service;
-            _context = context;
         }
         public IActionResult Create(int DepId)
         {
@@ -42,7 +40,8 @@ namespace Perfomans.Controllers
         {
             ViewBag.DepId = DepId;
             ViewBag.Parameters = _service.AllParameters();
-            ViewBag.SelectedItems = _context.Parameters.Where(i => i.ParametersGroups.Where(p => p.GroupId == id).Count() > 0 ? true : false).ToList();
+            var Parameters = _service.AllParameters();
+            ViewBag.SelectedItems = Parameters.ToList().Where(i => i.ParametersGroups.Where(p => p.GroupId == id).Count() > 0 ? true : false).ToList();
             Groups groups = _service.GetById(id);
             groups.ParametersGroups = _service.AllParametersGroups();
             return View(groups);
@@ -60,7 +59,8 @@ namespace Perfomans.Controllers
             ViewBag.Parameters = _service.AllParameters();
             Groups groups = _service.GetById(id);
             groups.ParametersGroups = _service.AllParametersGroups();
-            ViewBag.SelectedItems = _context.Parameters.Where(i => i.ParametersGroups.Where(p => p.GroupId == id).Count() > 0 ? true : false).ToList();
+            var Parameters = _service.AllParameters();
+            ViewBag.SelectedItems = Parameters.ToList().Where(i => i.ParametersGroups.Where(p => p.GroupId == id).Count() > 0 ? true : false).ToList();
             return View(groups);
         }
         public IActionResult Delete(int? id, int DepId)

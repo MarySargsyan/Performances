@@ -9,6 +9,9 @@ namespace Perfomans.Repository
     public interface IUserRepository
     {
         List<User> AllUsers();
+        List<Departments> AllDepartments();
+        List<Role> AllRoles();
+        List<State> AllStates();
         User GetById(int? id);
         User GetUserNmodelsById(int? id);
         void Insert(User user);

@@ -16,6 +16,12 @@ namespace Perfomans.Service
             _repository = repository;
         }
 
+        public IEnumerable<Departments> AllDepartments() => _repository.AllDepartments();
+
+        public IEnumerable<Role> AllRoles() => _repository.AllRoles();
+
+        public IEnumerable<State> AllStates() => _repository.AllStates();
+
         public IEnumerable<User> AllUsers() => _repository.AllUsers();
 
         public void Delete(int? id)=> _repository.Delete(id);

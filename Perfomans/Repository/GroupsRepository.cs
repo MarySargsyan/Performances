@@ -26,7 +26,8 @@ namespace Perfomans.Repository
 
         public List<Parameters> AllParameters()
         {
-            return _context.Parameters.ToList();
+            var param = _context.Parameters.Include(u => u.Departments).Include(u => u.ParametersGroups).Include(u => u.evaluations);
+            return param.ToList();
         }
 
         public List<ParametersGroup> AllParametersGroups()

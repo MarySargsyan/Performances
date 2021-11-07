@@ -21,7 +21,7 @@ namespace Perfomans.Controllers
         private readonly IDepartmentsService _service;
         private readonly IGroupService _groupService;
 
-        public DepartmentsController(ApplicationContext context, IDepartmentsService service, IGroupService groupService)
+        public DepartmentsController(IDepartmentsService service, IGroupService groupService)
         {
             _service = service;
             _groupService = groupService;

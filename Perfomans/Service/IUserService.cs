@@ -9,6 +9,9 @@ namespace Perfomans.Service
     public interface IUserService
     {
         IEnumerable<User> AllUsers();
+        IEnumerable<Departments> AllDepartments();
+        IEnumerable<Role> AllRoles();
+        IEnumerable<State> AllStates();
         User GetById(int? id);
         User GetUserNmodelsById(int? id);
         void Insert(User user);

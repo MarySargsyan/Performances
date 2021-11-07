@@ -17,11 +17,8 @@ namespace Perfomans.Repository
 
         public List<Parameters> AllParameters()
         {
-            using (_context)
-            {
-                return _context.Parameters.ToList();
+            return _context.Parameters.ToList();
                  
-            }
         }
 
         public void Delete(int? id)

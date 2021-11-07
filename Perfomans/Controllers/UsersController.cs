@@ -13,12 +13,10 @@ namespace Perfomans.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ApplicationContext _context;
         private readonly IUserService _service;
 
-        public UsersController(ApplicationContext context, IUserService service)
+        public UsersController(IUserService service)
         {
-            _context = context;
             _service = service;
         }
         [Authorize(Roles = "admin")]
@@ -31,10 +29,15 @@ namespace Perfomans.Controllers
 
         public IActionResult Create()
         {
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", _context.Departments.Select(x => x.Id).FirstOrDefault());
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", _context.Roles.Select(x => x.Id).FirstOrDefault());
-            ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", _context.User.Select(x => x.Id).FirstOrDefault());
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", _context.States.Select(x => x.Id).FirstOrDefault());
+            var Users = _service.AllUsers();
+            var Depo = _service.AllDepartments();
+            var Role = _service.AllRoles();
+            var State = _service.AllStates();
+
+            ViewData["SupervisorId"] = new SelectList(Users.ToList(), "Id", "Name", Users.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["DepartmentId"] = new SelectList(Depo.ToList(), "Id", "Name", Depo.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["RoleId"] = new SelectList(Role.ToList(), "Id", "Name", Role.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["StateId"] = new SelectList(State.ToList(), "Id", "Name", State.ToList().Select(x => x.Id).FirstOrDefault());
             return View();
         }
 
@@ -47,20 +50,30 @@ namespace Perfomans.Controllers
                 _service.Insert(user);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", user.DepartmentId);
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", user.RoleId);
-            ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", user.SupervisorId);
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", user.StateId);
+            var Users = _service.AllUsers();
+            var Depo = _service.AllDepartments();
+            var Role = _service.AllRoles();
+            var State = _service.AllStates();
+
+            ViewData["DepartmentId"] = new SelectList(Depo.ToList(), "Id", "Name", user.DepartmentId);
+            ViewData["RoleId"] = new SelectList(Role.ToList(), "Id", "Name", user.RoleId);
+            ViewData["SupervisorId"] = new SelectList(Users.ToList(), "Id", "Name", user.SupervisorId);
+            ViewData["StateId"] = new SelectList(State.ToList(), "Id", "Name", user.StateId);
             return View(user);
         }
 
         public IActionResult Edit(int? id)
         {
           User user = _service.GetById(id);
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", _context.Departments.Select(x => x.Id).FirstOrDefault());
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", _context.Roles.Select(x => x.Id).FirstOrDefault());
-            ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", _context.User.Select(x => x.Id).FirstOrDefault());
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", _context.States.Select(x => x.Id).FirstOrDefault());
+            var Users = _service.AllUsers();
+            var Depo = _service.AllDepartments();
+            var Role = _service.AllRoles();
+            var State = _service.AllStates();
+
+            ViewData["SupervisorId"] = new SelectList(Users.ToList(), "Id", "Name", Users.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["DepartmentId"] = new SelectList(Depo.ToList(), "Id", "Name", Depo.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["RoleId"] = new SelectList(Role.ToList(), "Id", "Name", Role.ToList().Select(x => x.Id).FirstOrDefault());
+            ViewData["StateId"] = new SelectList(State.ToList(), "Id", "Name", State.ToList().Select(x => x.Id).FirstOrDefault());
             return View(user);
         }
 
@@ -69,10 +82,15 @@ namespace Perfomans.Controllers
         public IActionResult Edit(int id, [Bind("Id,Name,SourName,Email,Password,RoleId,StateId,SupervisorId,DepartmentId")] User user)
         {
             _service.Update(user);
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name", user.DepartmentId);
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", user.RoleId);
-            ViewData["SupervisorId"] = new SelectList(_context.User, "Id", "Name", user.SupervisorId);
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", user.StateId);
+            var Users = _service.AllUsers();
+            var Depo = _service.AllDepartments();
+            var Role = _service.AllRoles();
+            var State = _service.AllStates();
+
+            ViewData["DepartmentId"] = new SelectList(Depo.ToList(), "Id", "Name", user.DepartmentId);
+            ViewData["RoleId"] = new SelectList(Role.ToList(), "Id", "Name", user.RoleId);
+            ViewData["SupervisorId"] = new SelectList(Users.ToList(), "Id", "Name", user.SupervisorId);
+            ViewData["StateId"] = new SelectList(State.ToList(), "Id", "Name", user.StateId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -86,6 +104,7 @@ namespace Perfomans.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+           
             _service.Delete(id);
             return RedirectToAction(nameof(Index));
         }

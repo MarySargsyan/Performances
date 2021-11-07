@@ -1,4 +1,5 @@
-﻿using Perfomans.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Perfomans.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace Perfomans.Repository
         public DepParamRepository(ApplicationContext context)
         {
             _context = context;
+        }
+
+        public List<Parameters> AllParameters()
+        {
+            var parameters = _context.Parameters.Include(u => u.Departments).Include(u => u.evaluations).Include(u => u.ParametersGroups);
+            return parameters.ToList();
         }
 
         public void Delete(int DepartmentId, int ParameterId)

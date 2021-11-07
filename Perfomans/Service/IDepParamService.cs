@@ -12,5 +12,7 @@ namespace Perfomans.Service
         void Insert(DepartmentParameters departmentParameters);
         void Update(DepartmentParameters departmentParameters);
         void Delete(int DepartmentId, int ParameterId);
+        public IEnumerable<Parameters> AllParameters();
+
     }
 }

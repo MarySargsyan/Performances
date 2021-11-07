@@ -12,6 +12,7 @@ namespace Perfomans.Repository
         void Insert(DepartmentParameters departmentParameters);
         void Update(DepartmentParameters departmentParameters) ;
         void Delete(int DepartmentId, int ParameterId);
+        public List<Parameters> AllParameters();
 
     }
 }

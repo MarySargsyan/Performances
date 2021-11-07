@@ -16,6 +16,7 @@ namespace Perfomans.Service
             _repository = repository;
         }
 
+        public IEnumerable<Parameters> AllParameters() => _repository.AllParameters();
         public void Delete(int DepartmentId, int ParameterId) => _repository.Delete(DepartmentId, ParameterId);
 
         public DepartmentParameters GetById(int DepartmentId, int ParameterId) => _repository.GetById(DepartmentId, ParameterId);

@@ -12,25 +12,24 @@ namespace Perfomans.Controllers
 {
     public class DepParam : Controller
     {
-        private readonly ApplicationContext _context;
         private readonly IDepParamService _service;
 
-        public DepParam(ApplicationContext context, IDepParamService service)
+        public DepParam(IDepParamService service)
         {
-            _context = context;
             _service = service;
         }
 
         public ActionResult Create(int depId)
         {
             ViewBag.DepId = depId;
-            ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
+            var Parameters = _service.AllParameters();
+            ViewData["ParameterId"] = new SelectList(Parameters.ToList(), "Id", "Name", Parameters.ToList().Select(x => x.Id).FirstOrDefault());
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters, int? DepId)
+        public ActionResult Create([Bind("ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters)
         {
             if (ModelState.IsValid)
             {
@@ -42,7 +41,8 @@ namespace Perfomans.Controllers
 
         public ActionResult Edit(int DepartmentId, int ParameterId)
         {
-            ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
+            var Parameters = _service.AllParameters();
+            ViewData["ParameterId"] = new SelectList(Parameters.ToList(), "Id", "Name", Parameters.ToList().Select(x => x.Id).FirstOrDefault());
             return View(_service.GetById(DepartmentId, ParameterId));
         }
 
@@ -51,13 +51,16 @@ namespace Perfomans.Controllers
         public ActionResult Edit([Bind("ParameterId, DepartmentId, mark")] DepartmentParameters departmentParameters)
         {
             _service.Update(departmentParameters);
-            ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
+            var Parameters = _service.AllParameters();
+
+            ViewData["ParameterId"] = new SelectList(Parameters.ToList(), "Id", "Name", Parameters.ToList().Select(x => x.Id).FirstOrDefault());
             return RedirectToAction("DepartmentPage", "Departments", new { id = departmentParameters.DepartmentId });
         }
 
         public ActionResult Delete(int DepartmentId, int ParameterId)
         {
-            ViewBag.ParameterName = _context.Parameters.Find(ParameterId).Name;
+            var Parameters = _service.AllParameters();
+            ViewBag.ParameterName = Parameters.ToList().Where(p => p.Id == ParameterId).Select(p => p.Name);
             return View(_service.GetById(DepartmentId, ParameterId));
         }
 
