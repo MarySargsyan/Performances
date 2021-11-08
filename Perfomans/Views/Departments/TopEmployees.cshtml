@@ -1,9 +1,8 @@
 ﻿@model Perfomans.Models.Departments
 @using Perfomans.Models
 
-<h1>Groups</h1>
 
-<table class="ui compact celled definition table">
+<table style="margin-top:2em" class="ui compact celled definition table">
     <thead>
         <tr>
             <th>Name</th>
@@ -34,10 +33,10 @@
                             if ((parametersGroup.GroupId == ViewBag.GroupId) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
                             {
                                 @evaluations.Parameter.Name <span>-</span> @evaluations.Mark
+                                <br />
 
                             }
                         }
-                        <br />
                     }
                 </td>
                 <td>
@@ -47,7 +46,7 @@
                 </td>
             </tr>
         }
-        @Html.ActionLink("Export data to excel", "Excel", "Departments")
 
     </tbody>
-</table>
+</table> 
+       @Html.ActionLink("Export data to excel", "Excel", "Departments")

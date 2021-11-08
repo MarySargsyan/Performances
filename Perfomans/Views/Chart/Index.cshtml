@@ -39,11 +39,11 @@
                                         <div style="margin-top: 1em" class="ui middle aligned divided list">
                                             @foreach(User employee in ViewBag.AllUsers)
                                             {
-                                                  if(employee.SupervisorId == u.SupervisorId)
+                                                  if(employee.SupervisorId == u.Id)
                                                   {
                                                     <div class="item">
                                                         <div class="content">
-                                                            <a class="header">Daniel Louise</a>
+                                                            <p class="header">@employee.Name</p>
                                                         </div>
                                                     </div>
                                                   }
