@@ -45,8 +45,18 @@ namespace Perfomans.Models
             string adminName = "Mary";
             string adminSourName = "Sargsyan";
 
+            string HeadEmail = "Head@mail.ru";
+            string HeadPassword = "123456";
+            string HeadName = "Kseniya";
+            string HeadSourName = "Svistunova";
+
+            string TeamLeadEmail = "TeamLead@mail.ru";
+            string TeamLeadPassword = "123456";
+            string TeamLeadName = "Polina";
+            string TeamLeadSourName = "Shevchuk";
+
             string devdep = "Developing";
-            string GroupName = "Group1";
+            string GroupName = "Future Manager";
 
             string DefState = "Default";
             string FireState = "Fired";
@@ -79,6 +89,28 @@ namespace Perfomans.Models
                 DepartmentId = departments.Id,
                 StateId = state.Id,
                 SupervisorId = 1
+            };
+            User HeadUser = new User {
+                Id = 2,
+                Name = HeadName,
+                SourName = HeadSourName,
+                Email = HeadEmail,
+                Password = HeadPassword,
+                RoleId = HeadRole.Id,
+                DepartmentId = departments.Id,
+                StateId = state.Id,
+                SupervisorId = 1
+            };
+            User TeamLeadUser = new User {
+                Id = 3,
+                Name = TeamLeadName,
+                SourName = TeamLeadSourName,
+                Email = TeamLeadEmail,
+                Password = TeamLeadPassword,
+                RoleId = TLRole.Id,
+                DepartmentId = departments.Id,
+                StateId = state.Id,
+                SupervisorId = 2
             };
             modelBuilder.Entity<User>().HasData(new User[] { adminUser });
 
