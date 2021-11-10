@@ -9,7 +9,6 @@ namespace Perfomans.Models
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<User> User { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<DepartmentParameters> DepartmentParameters { get; set; }
@@ -17,6 +16,8 @@ namespace Perfomans.Models
         public DbSet<ParametersGroup> ParametersGroups { get; set; }
         public DbSet<Groups> Groups { get; set; }
         public DbSet<Evaluations> Evaluations { get; set; }
+        public DbSet<User> User { get; set; }
+
         public DbSet<State> States { get; set; } 
 
 
@@ -112,7 +113,7 @@ namespace Perfomans.Models
                 StateId = state.Id,
                 SupervisorId = 2
             };
-            modelBuilder.Entity<User>().HasData(new User[] { adminUser });
+            modelBuilder.Entity<User>().HasData(new User[] { adminUser, HeadUser, TeamLeadUser });
 
             base.OnModelCreating(modelBuilder);
         }
