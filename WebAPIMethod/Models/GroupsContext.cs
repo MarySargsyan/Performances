@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using WebAPIMethod.Models;
 
-namespace Perfomans.Models
+namespace WebAPIMethod.Models
 {
-    public class ApplicationContext : DbContext
+    public class GroupsContext : DbContext
     {
         public DbSet<Departments> Departments { get; set; }
         public DbSet<Parameters> Parameters { get; set; }
@@ -11,6 +12,7 @@ namespace Perfomans.Models
         public DbSet<Groups> Groups { get; set; }
         public DbSet<Evaluations> Evaluations { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<UserParamEval> UserParamEval { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -55,8 +57,8 @@ namespace Perfomans.Models
             Groups group1 = new Groups { id = 1, Name = GroupName, DepartmentId = department.Id };
             Groups group2 = new Groups { id = 2, Name = GroupName1, DepartmentId = department.Id };
 
-            Parameters parameter= new Parameters { Id = 1, Name = param1 };
-            Parameters parameter2= new Parameters { Id = 2, Name = param2 };
+            Parameters parameter = new Parameters { Id = 1, Name = param1 };
+            Parameters parameter2 = new Parameters { Id = 2, Name = param2 };
 
             ParametersGroup parametersGroup = new ParametersGroup { ParameterId = 1, GroupId = 1 };
             ParametersGroup parametersGroup2 = new ParametersGroup { ParameterId = 2, GroupId = 1 };
@@ -93,16 +95,25 @@ namespace Perfomans.Models
                 DepartmentId = department.Id,
                 SupervisorId = 2
             };
+
+            DateTime myDate = DateTime.Parse("25/10/2021");
+
+            Evaluations evaluation = new Evaluations { Id = 1, Date = myDate, AssessorId = 1, UserId= 2 };
+            Evaluations evaluation3 = new Evaluations { Id = 3, Date = myDate, AssessorId = 1, UserId= 3};
+
             modelBuilder.Entity<Departments>().HasData(new Departments[] { department, department2 });
             modelBuilder.Entity<Parameters>().HasData(new Parameters[] { parameter, parameter2 });
+            modelBuilder.Entity<ParametersGroup>().HasData(new ParametersGroup[] { parametersGroup, parametersGroup2, parametersGroup3, parametersGroup4 });
             modelBuilder.Entity<Groups>().HasData(new Groups[] { group1, group2});
+            modelBuilder.Entity<User>().HasData(new User[] { adminUser, HeadUser, TeamLeadUser });
+            modelBuilder.Entity<Evaluations>().HasData(new Evaluations[] { evaluation, evaluation3 });
 
             base.OnModelCreating(modelBuilder);
         }
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
-            : base(options)
-        {
+          public GroupsContext(DbContextOptions<GroupsContext> options)
+              : base(options)
+          {
             Database.EnsureCreated();
-        }
+          }
     }
 }

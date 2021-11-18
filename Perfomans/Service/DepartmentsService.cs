@@ -27,7 +27,7 @@ namespace Perfomans.Service
 
         public Departments GetById(int? id) => _repository.GetById(id);
 
-        public List<Evaluations> GetLastEvaluations() => _repository.GetLastEvaluations();
+        public Evaluations GetLastEvaluations() => _repository.GetLastEvaluations();
 
         public List<Evaluations> GetOldEvaluations() => _repository.GetOldEvaluations();
 

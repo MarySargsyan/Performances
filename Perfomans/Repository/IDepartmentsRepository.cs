@@ -17,7 +17,7 @@ namespace Perfomans.Repository
         void WorkbookCreate(XLWorkbook workbook);
         List<User> CountTop(int DepId, int GroupId, int EmployeeCount);
         Departments DepEmployeesProgreses(int? Id);
-        List<Evaluations> GetLastEvaluations();
+        Evaluations GetLastEvaluations();
         List<Evaluations> GetOldEvaluations();
         double GetUsersEvaluationAvg(User user);
         double GetUserLastEvaluationAvg(User user);

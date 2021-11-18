@@ -33,14 +33,11 @@ namespace Perfomans.Repository
                 user.result = 0.0;
                 foreach (ParametersGroup parametersGroup in _context.ParametersGroups.Where(p => p.GroupId == GroupId).ToList())
                 {
-                    foreach (Evaluations evaluations in GetLastEvaluations())
-                    {
-                        if ((parametersGroup.GroupId == GroupId) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
-                        {
-                            user.result += (evaluations.Parameter.Coefficient * evaluations.Mark);
-                        }
+                    foreach (UserParamEval e in _context.UserParamEval.Where(upe => upe.EvaluationsId == GetLastEvaluations().Id &
+                    upe.UserId == user.Id & upe.ParameterId == parametersGroup.ParameterId))
+                    { 
+                        user.result += (e.Parameter.Coefficient * e.Mark);
                     }
-
                 }
             }
             var topsort = from user in departments.User orderby user.result descending select user;
@@ -80,24 +77,9 @@ namespace Perfomans.Repository
             return _context.Departments.Include(d => d.DepartmentParameters).Include(d => d.Groups).Include(d => d.User).FirstOrDefault(d => d.Id == id);
         }
 
-        public List<Evaluations> GetLastEvaluations()
+        public Evaluations GetLastEvaluations()
         {
-            List<Evaluations> lastevaluations = new List<Evaluations>();
-            foreach (Evaluations evaluations in _context.Evaluations.ToList())
-            {
-                lastevaluations.Add(evaluations);
-            }
-            foreach (Evaluations laste in lastevaluations.ToList())
-            {
-                foreach (Evaluations e in _context.Evaluations.ToList())
-                {
-                    if ((e.UserId == laste.UserId) & (e.ParameterId == laste.ParameterId) & (e.Id < laste.Id))
-                    {
-                        lastevaluations.Remove(e);
-                    }
-                }
-            }
-            return (lastevaluations);
+            return _context.Evaluations.Last();
         }
 
         public List<Evaluations> GetOldEvaluations()
@@ -105,11 +87,10 @@ namespace Perfomans.Repository
             List<Evaluations> oldevaluations = new List<Evaluations>();
             foreach (Evaluations evaluations in _context.Evaluations.ToList())
             {
-                oldevaluations.Add(evaluations);
-            }
-            foreach (Evaluations e in GetLastEvaluations())
-            {
-                oldevaluations.Remove(e);
+                if (evaluations != _context.Evaluations.Last())
+                {
+                    oldevaluations.Add(evaluations);
+                }
             }
             return (oldevaluations);
         }
@@ -119,17 +100,33 @@ namespace Perfomans.Repository
             double Avg = 0.0;
             double count = 0.0;
             double sum = 0.0;
-            foreach (Evaluations e in GetLastEvaluations())
+            foreach (UserParamEval e in _context.UserParamEval.Where(upe=> upe.EvaluationsId == GetLastEvaluations().Id & upe.UserId == user.Id))
             {
-                if (e.UserId == user.Id)
+              sum += e.Mark;
+              count += 1;
+            }
+            Avg = sum / count;
+            return Avg;
+        }
+
+
+        public double GetUsersEvaluationAvg(User user)
+        {
+            double Avg = 0.0;
+            double count = 0.0;
+            double sum = 0.0;
+            foreach (Evaluations e in GetOldEvaluations())
+            {
+                foreach (UserParamEval upe in _context.UserParamEval.Where(upe => upe.EvaluationsId == e.Id & upe.UserId == user.Id))
                 {
-                    sum += e.Mark;
+                    sum += upe.Mark;
                     count += 1;
                 }
             }
             Avg = sum / count;
             return Avg;
         }
+
 
         public int GetUserProgress(User user)
         {
@@ -149,23 +146,6 @@ namespace Perfomans.Repository
             }
 
             return user.progress;
-        }
-
-        public double GetUsersEvaluationAvg(User user)
-        {
-            double Avg = 0.0;
-            double count = 0.0;
-            double sum = 0.0;
-            foreach (Evaluations e in GetOldEvaluations())
-            {
-                if (e.UserId == user.Id)
-                {
-                    sum += e.Mark;
-                    count += 1;
-                }
-            }
-            Avg = sum / count;
-            return Avg;
         }
 
         public void Insert(Departments departments)
@@ -197,14 +177,15 @@ namespace Perfomans.Repository
 
                 foreach (ParametersGroup parametersGroup in ParametersGroupsForExport)
                 {
-                    foreach (Evaluations evaluations in GetLastEvaluations())
+                    if (parametersGroup.GroupId == GroupIdForExport)
                     {
-                        if ((parametersGroup.GroupId == GroupIdForExport) & (parametersGroup.ParameterId == evaluations.ParameterId) & (evaluations.UserId == user.Id))
+                        foreach (UserParamEval e in _context.UserParamEval.Where(upe => upe.EvaluationsId == GetLastEvaluations().Id
+                        & upe.UserId == user.Id & upe.ParameterId == parametersGroup.ParameterId))
                         {
-                            Parameters = Parameters + evaluations.Parameter.Name + "- " + evaluations.Mark + "\n";
-
+                          Parameters = Parameters + e.Parameter.Name + "- " + e.Mark + "\n";
                         }
                     }
+
                 }
                 worksheet.Cell(currentRow, 3).Value = Parameters;
                 worksheet.Cell(currentRow, 4).Value = user.result;

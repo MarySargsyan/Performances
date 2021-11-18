@@ -20,10 +20,12 @@ namespace WebAPIMethod.Models
         public int? UserId { get; set; }
         public User User { get; set; }
 
-        public int? ParameterId { get; set; }
-        public Parameters Parameter { get; set; }
+        public List<UserParamEval> UserParamEvals { get; set; }
 
-        public double Mark { get; set; }
+        public Evaluations()
+        {
+            UserParamEvals = new List<UserParamEval>();
+        }
 
     }
 }

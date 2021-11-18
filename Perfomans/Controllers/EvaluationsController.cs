@@ -24,12 +24,16 @@ namespace Perfomans.Controllers
         {
             return View(_service.AllCorrentAssesorEvaluations(User.Identity.Name));
         }
+        public IActionResult EvaluationPage(int? id)
+        {
+            ViewBag.Parameters = _service.AllParam();
+            ViewBag.AllUsers = _service.MyEmployees(User.Identity.Name);
+            var evaluation = _service.GetById(id);
+            return View(evaluation);
+        }
 
         public IActionResult Create()
         {
-            List<User> myEmployees = _service.MyEmployees(User.Identity.Name);
-            ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", _context.Parameters.Select(x => x.Id).FirstOrDefault());
-            ViewData["UserId"] = new SelectList(myEmployees, "Id", "Name", _context.User.Select(x => x.Id).FirstOrDefault());
             return View();
         }
 
@@ -41,16 +45,30 @@ namespace Perfomans.Controllers
             {
                 evaluations.AssessorId = _service.GetCorrentAssesor(User.Identity.Name);
                 _service.Insert(evaluations);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EvaluationMarksGrid", new { id = evaluations.Id });
             }
-            ViewData["ParameterId"] = new SelectList(_context.Parameters, "Id", "Name", evaluations.ParameterId);
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Name", evaluations.UserId);
+
             return View(evaluations);
         }
-
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([Bind("Id,Date,ParameterId,UserId,Mark")] Evaluations evaluations, List<int> marks)
         {
-            var evaluation = await _context.Evaluations.Include(u => u.Parameter).Include(u => u.User).Include(u => u.Assessor).FirstOrDefaultAsync(m => m.Id == id);
+            _service.Update(evaluations, marks);
+            return RedirectToAction("EvaluationPage", new { id = evaluations.Id});
+        }
+
+        public IActionResult EvaluationMarksGrid(int? id)
+        {
+            ViewBag.Parameters = _service.AllParam();
+            ViewBag.AllUsers = _service.MyEmployees(User.Identity.Name);
+            var evaluation = _service.GetById(id);
+            return View(evaluation);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            var evaluation = _service.GetById(id); 
             return View(evaluation);
         }
 

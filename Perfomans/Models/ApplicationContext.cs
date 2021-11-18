@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Perfomans.Models;
 
 namespace Perfomans.Models
 {
@@ -122,5 +123,6 @@ namespace Perfomans.Models
         {
             Database.EnsureCreated();
         }
+        public DbSet<Perfomans.Models.UserParamEval> UserParamEval { get; set; }
     }
 }

@@ -12,8 +12,10 @@ namespace Perfomans.Repository
         List<Evaluations> AllCorrentAssesorEvaluations(string userName);
         Evaluations GetById(int? id);
         void Insert(Evaluations evaluations);
+        void Update(Evaluations evaluations, List<int> marks);
         void Delete(int? id);
         List<User> MyEmployees(string userName);
+        List<Parameters> AllParam();
 
     }
 }

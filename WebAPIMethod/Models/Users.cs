@@ -27,5 +27,12 @@ namespace WebAPIMethod.Models
         public double result { get; set; }
         [NotMapped]
         public int progress { get; set; }
+        public List<Evaluations> Evaluations { get; set; }
+
+
+        public User()
+        {
+            Evaluations = new List<Evaluations>();
+        }
     }
 }

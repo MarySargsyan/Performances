@@ -1,0 +1,65 @@
+﻿@model Perfomans.Models.Evaluations
+
+@{
+    ViewData["Title"] = "EvaluationPage";
+}
+
+<div style="margin-top:2em" class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Date)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Assessor)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Assessor.Name)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="col-sm">
+            <a class="SecondaryB" style="float:right" asp-action="EvaluationMarksGrid" asp-route-id="@Model.Id"><i class="pencil alternate icon"></i>Edit</a>
+
+        </div>
+    </div>
+</div>
+<table style="margin-top:2em" class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+
+            @foreach (Parameters parameters in ViewBag.Parameters)
+            {
+                <th scope="col">
+                    <p style=" margin-top:3.5em;font-size: 12px;transform: rotate(-90deg);filter: flipH flipV;height: 40px; width:30px">
+                        @parameters.Name
+                    </p>
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @foreach (User user in ViewBag.AllUsers)
+            {
+                    <td>
+                        @user.Name <span> </span> @user.SourName
+                    </td>
+                @foreach (UserParamEval paramEval in Model.UserParamEvals.Where(pe=> pe.UserId == user.Id))
+                {
+                    <td>
+                       @paramEval.Mark
+                    </td>
+                }
+            }
+
+        </tr>
+    </tbody>
+</table>

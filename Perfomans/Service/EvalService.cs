@@ -18,6 +18,8 @@ namespace Perfomans.Service
 
         public List<Evaluations> AllCorrentAssesorEvaluations(string userName) => _repository.AllCorrentAssesorEvaluations(userName);
 
+        public List<Parameters> AllParam() => _repository.AllParam();
+
         public void Delete(int? id) => _repository.Delete(id);
 
         public Evaluations GetById(int? id) => _repository.GetById(id);
@@ -27,5 +29,7 @@ namespace Perfomans.Service
         public void Insert(Evaluations evaluations) => _repository.Insert(evaluations);
 
         public List<User> MyEmployees(string userName) => _repository.MyEmployees(userName);
+
+        public void Update(Evaluations evaluations, List<int> marks) => _repository.Update(evaluations, marks);
     }
 }

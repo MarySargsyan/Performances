@@ -17,13 +17,11 @@ namespace Perfomans.Models
         public int? AssessorId { get; set; }
         public User Assessor { get; set; }
 
-        public int? UserId { get; set; }
-        public User User { get; set; }
+        public List<UserParamEval> UserParamEvals { get; set; }
 
-        public int? ParameterId { get; set; }
-        public Parameters Parameter { get; set; }
-
-        public double Mark { get; set; }
-
+        public Evaluations()
+        {
+            UserParamEvals = new List<UserParamEval>();
+        }
     }
 }
