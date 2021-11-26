@@ -15,6 +15,7 @@ namespace Perfomans.Service
         void Update(Departments departments);
         void Delete(int? id);
         void WorkbookCreate(XLWorkbook workbook);
+        List<UserParamEval> AllUPE();
 
         List<User> CountTop(int DepId, int GroupId, int EmployeeCount);
         Departments DepEmployeesProgreses(int? Id);

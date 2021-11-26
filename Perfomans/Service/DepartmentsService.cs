@@ -19,6 +19,8 @@ namespace Perfomans.Service
 
         public List<Departments> AllDepartments() => _repository.AllDepartments();
 
+        public List<UserParamEval> AllUPE() => _repository.AllUPE();
+
         public List<User> CountTop(int DepId, int GroupId, int EmployeeCount) => _repository.CountTop(DepId, GroupId, EmployeeCount);
 
         public void Delete(int? id) => _repository.Delete(id);

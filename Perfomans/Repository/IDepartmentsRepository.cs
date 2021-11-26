@@ -10,6 +10,7 @@ namespace Perfomans.Repository
     public interface IDepartmentsRepository
     {
         List<Departments> AllDepartments();
+        List<UserParamEval> AllUPE();
         Departments GetById(int? id);
         void Insert(Departments departments);
         void Update(Departments departments);

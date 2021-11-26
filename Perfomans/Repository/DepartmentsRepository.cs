@@ -79,7 +79,8 @@ namespace Perfomans.Repository
 
         public Evaluations GetLastEvaluations()
         {
-            return _context.Evaluations.Last();
+            Evaluations lasteval = _context.Evaluations.ToList().Last();
+            return lasteval;
         }
 
         public List<Evaluations> GetOldEvaluations()
@@ -87,7 +88,7 @@ namespace Perfomans.Repository
             List<Evaluations> oldevaluations = new List<Evaluations>();
             foreach (Evaluations evaluations in _context.Evaluations.ToList())
             {
-                if (evaluations != _context.Evaluations.Last())
+                if (evaluations != _context.Evaluations.ToList().Last())
                 {
                     oldevaluations.Add(evaluations);
                 }
@@ -190,6 +191,11 @@ namespace Perfomans.Repository
                 worksheet.Cell(currentRow, 3).Value = Parameters;
                 worksheet.Cell(currentRow, 4).Value = user.result;
             }
+        }
+
+        public List<UserParamEval> AllUPE()
+        {
+            return _context.UserParamEval.ToList();
         }
     }
 }

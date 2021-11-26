@@ -35,10 +35,10 @@ namespace Perfomans.Controllers
         }
         public ActionResult DepartmentPage(int? id)
         {
-            ViewBag.Evaluations = _service.GetLastEvaluations();
+            ViewBag.LastEvalId = _service.GetLastEvaluations().Id;
             ViewBag.Parameters = _groupService.AllParameters();
             ViewBag.ParametersGroups = _groupService.AllParametersGroups();
-
+            ViewBag.UserParamEvaluations = _service.AllUPE();
             return View(_service.DepEmployeesProgreses(id));
         }
 

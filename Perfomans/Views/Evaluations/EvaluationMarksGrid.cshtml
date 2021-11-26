@@ -30,7 +30,13 @@
             </div>
             <div class="col-sm">
                 <input type="submit" class="SecondaryB" style="float:right" value="Save">
-
+                @using (Html.BeginForm("Import", "Evaluations", FormMethod.Post, new { enctype = "multipart/form-data", id = Model.Id }))
+                {
+                    <div>
+                        <input type="file" name="fileExcel" id="fileExcel" />>
+                        <button type="submit" class="SecondaryB">Import from Excel</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -52,22 +58,23 @@
         </thead>
 
         <tbody>
-            <tr>
-                @foreach (User user in ViewBag.AllUsers)
-                {
+            @foreach (User user in ViewBag.AllUsers)
+            {
+                <tr>
+
                     <td>
                         @user.Name <span> </span> @user.SourName
                     </td>
 
-                   @foreach (UserParamEval paramEval in Model.UserParamEvals.Where(pe => pe.UserId == user.Id))
+                    @foreach (UserParamEval paramEval in Model.UserParamEvals.Where(pe => pe.UserId == user.Id))
                     {
-                      <td>
-                        <input style="width: 50%; margin-top: 20%; border-color: transparent; " type="text" name="marks" id="marks" value="@paramEval.Mark" />
-                      </td>
+                        <td>
+                            <input style="width: 50%; margin-top: 20%; border-color: transparent; " type="text" name="marks" id="marks" value="@paramEval.Mark" />
+                        </td>
 
                     }
-                }
-            </tr>
+                </tr>
+            }
         </tbody>
     </table>
 

@@ -46,20 +46,21 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            @foreach (User user in ViewBag.AllUsers)
-            {
-                    <td>
-                        @user.Name <span> </span> @user.SourName
-                    </td>
-                @foreach (UserParamEval paramEval in Model.UserParamEvals.Where(pe=> pe.UserId == user.Id))
+
+        @foreach (User user in ViewBag.AllUsers)
+        {
+            <tr>
+                <td>
+                    @user.Name <span> </span> @user.SourName
+                </td>
+                @foreach (UserParamEval paramEval in Model.UserParamEvals.Where(pe => pe.UserId == user.Id))
                 {
                     <td>
-                       @paramEval.Mark
+                        @paramEval.Mark
                     </td>
                 }
-            }
+            </tr>
+        }
 
-        </tr>
     </tbody>
 </table>

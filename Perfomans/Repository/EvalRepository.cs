@@ -57,21 +57,21 @@ namespace Perfomans.Repository
 
         public void Insert(Evaluations evaluations)
         {
-            _context.Add(evaluations);
-
             foreach (User user in _context.User.Where(u => u.SupervisorId == evaluations.AssessorId))
             {
-                foreach (Parameters parameters in _context.Parameters.ToList())
-                {
-                    UserParamEval userParamEval = new UserParamEval();
-                    userParamEval.EvaluationsId = evaluations.Id;
-                    userParamEval.UserId = user.Id;
-                    userParamEval.ParameterId = parameters.Id;
-                    userParamEval.Mark = 0;
-                    _context.UserParamEval.Add(userParamEval);
-                }
+                    foreach (Parameters parameters in _context.Parameters.ToList())
+                    {
+                        UserParamEval userParamEval = new UserParamEval();
+                        userParamEval.EvaluationsId = evaluations.Id;
+                        userParamEval.UserId = user.Id;
+                        userParamEval.ParameterId = parameters.Id;
+                        userParamEval.Mark = 0;
+                        _context.UserParamEval.Add(userParamEval);
+
+                    }
             }
             _context.SaveChanges();
+
         }
 
         public List<User> MyEmployees(string userName)
@@ -81,7 +81,7 @@ namespace Perfomans.Repository
             foreach (User users in _context.User.Where(u => u.SupervisorId == GetCorrentAssesor(userName)).ToList())
             {
                 myEmployees.Add(users);
-                foreach (User u in _context.User.Where(u => u.SupervisorId == users.Id).ToList())
+                foreach (User u in _context.User.Where(u => u.SupervisorId == users.Id & u.SupervisorId != GetCorrentAssesor(userName)).ToList())
                 {
                     myEmployees.Add(u);
                 }
