@@ -1,4 +1,4 @@
-# Performans
+# Performances
 <h3>This is an application for evaluating employees in the company</h3>
 
 <p>  After launching the application, you will be prompted to log in. You can log in to the system in 3 roles: administrator, department head and team leader.<br/>
